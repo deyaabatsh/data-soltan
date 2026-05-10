@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green:  #1a6b3c; --green-l: #2d9b5a; --green-p: #e8f5ee;
+  --green:  #1a3d6b; --green-l: #2563ab; --green-p: #e8f0fa;
   --blue:   #1d4e89; --blue-l:  #2563ab; --blue-p:  #e8f0fa;
   --brown:  #7b3f00; --brown-l: #a05a20; --brown-p: #fdf0e6;
   --purple: #6b2d8b; --purple-l:#8b3dab; --purple-p:#f5eafa;
@@ -18,13 +18,13 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family:'Cairo',sans-serif;
-  background: linear-gradient(160deg,#f0f7f3,#eef3fa,#f5f0fb);
+  background: linear-gradient(160deg,#f0f3f7,#eef3fa,#f5f0fb);
   min-height:100vh; color:var(--dark); padding:28px 14px;
 }
 .page-header { text-align:center; margin-bottom:36px; }
 .logo { width:150px; height:150px; background:linear-gradient(135deg,var(--green),var(--green-l));
   border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
-  font-size:28px; margin-bottom:10px; box-shadow:0 4px 16px rgba(26,107,60,.3); }
+  font-size:28px; margin-bottom:10px; box-shadow:0 4px 16px rgba(26,61,107,.3); }
 h1 { font-size:26px; font-weight:900; color:var(--green); margin-bottom:4px; }
 .subtitle { font-size:13px; color:var(--gray); }
 .divider { width:80px; height:3px; background:linear-gradient(90deg,var(--green),#c9a227);
@@ -74,9 +74,9 @@ textarea { resize:vertical; min-height:72px; }
   background:linear-gradient(135deg,var(--green),var(--green-l));
   color:#fff; border:none; padding:15px 52px; font-size:16px; font-weight:700;
   font-family:'Cairo',sans-serif; border-radius:50px; cursor:pointer;
-  box-shadow:0 6px 24px rgba(26,107,60,.35); transition:all .25s;
+  box-shadow:0 6px 24px rgba(26,61,107,.35); transition:all .25s;
 }
-.btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(26,107,60,.42); }
+.btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(26,61,107,.42); }
 .btn:disabled { opacity:.65; cursor:not-allowed; transform:none; }
 .btn .spin { display:none; width:16px; height:16px; border:3px solid rgba(255,255,255,.4);
   border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite;
@@ -104,6 +104,21 @@ textarea { resize:vertical; min-height:72px; }
   h1 { font-size:20px; }
   .btn { padding:13px 32px; font-size:14px; }
 }
+.upload-wrap {
+  position:relative; border:2px dashed var(--border); border-radius:9px;
+  padding:18px 12px; text-align:center; background:var(--gray-l);
+  cursor:pointer; transition:border-color .15s,background .15s; overflow:hidden;
+}
+.upload-wrap:hover { border-color:#2563ab; background:#e8f0fa; }
+.upload-wrap.has-file { border-color:#2a7a5a; background:#edf7f2; }
+.upload-wrap input[type=file] {
+  position:absolute; inset:0; opacity:0; cursor:pointer;
+  width:100%; height:100%; border:none; background:none; box-shadow:none; padding:0;
+}
+.upload-icon { font-size:24px; margin-bottom:5px; display:block; }
+.upload-text { font-size:12px; color:var(--gray); }
+.upload-hint { font-size:11px; color:var(--gray); margin-top:3px; }
+.file-preview { font-size:12px; color:#2a7a5a; font-weight:500; margin-top:4px; display:none; }
 </style>
 </head>
 <body>
@@ -371,9 +386,14 @@ textarea { resize:vertical; min-height:72px; }
       <textarea id="رسالة_الطفل" placeholder="كلمة من الأم أو المعيل أو الطفل..."></textarea>
     </div>
     <div class="fg">
-      <label>رابط صورة الطفل</label>
-      <input type="url" id="صورة_الطفل" placeholder="https://...">
-      <span class="hint">رابط الصورة إن وجد</span>
+      <label>صورة الطفل</label>
+      <div class="upload-wrap" id="photo-wrap">
+        <input type="file" accept="image/*" onchange="handlePhotoUpload(this)">
+        <span class="upload-icon">🖼️</span>
+        <div class="upload-text">اضغط لرفع صورة الطفل</div>
+        <div class="upload-hint">JPG, PNG — حد أقصى 5MB</div>
+        <div class="file-preview" id="photo-name"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -415,7 +435,7 @@ textarea { resize:vertical; min-height:72px; }
 <div class="toast" id="toast"></div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzX2GKMj9PkLpYJgSfVZ2WVjl_8hrh7ANzfVyPmzNEp4w-4kgphcTualc_20sqbQzMp3Q/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiovcbFpAWgytgo6R35vrsdUEbAsG6m3pSU03dwV6WDtcD8V4CEuQlPng6CuH9u4vl1A/exec';
 
 const d10 = v => /^\d{10}$/.test(v);
 const d9  = v => /^\d{9}$/.test(v);
@@ -476,7 +496,7 @@ const IDS = [
   'عدد_أفراد_الأسرة','عدد_المعالين','صلة_القرابة_للمعالين','المستوى_التعليمي_للمعالين',
   'ملاحظات','حالة_المنزل','طبيعة_المسكن_الحالي','العنوان','ملاحظات_السكن',
   'هواية_الطفل','المهنة_التي_يحلم_بها','أكثر_ما_افتقده_بسبب_الحرب','عدد_سنوات_الانقطاع',
-  'يحتاج_دعم_نفسي','ماذا_يفعل_بيومه','رسالة_الطفل','صورة_الطفل','الهوايات',
+  'يحتاج_دعم_نفسي','ماذا_يفعل_بيومه','رسالة_الطفل','الهوايات',
   'حلم_الطفل','المادة_المفضلة','نوع_الإصابة','طبيعة_الإصابة','يحتاج_علاج_طبيعي'
 ];
 
@@ -497,6 +517,8 @@ document.getElementById('frm').addEventListener('submit', async function(e) {
     data[id] = el ? el.value.trim() : '';
   });
 
+  data['صورة_الطفل'] = photoData || '';
+
   // رقم واتساب مع مقدمة الدولة
   if (data['رقم_واتساب']) {
     data['رقم_واتساب'] = document.getElementById('wa_prefix').value + data['رقم_واتساب'];
@@ -516,6 +538,31 @@ document.getElementById('frm').addEventListener('submit', async function(e) {
 
   btn.disabled = false; btn.classList.remove('loading');
 });
+
+var photoData = null;
+function handlePhotoUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var MAX_WIDTH = 800;
+      var scale = Math.min(1, MAX_WIDTH / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      photoData = canvas.toDataURL('image/jpeg', 0.6);
+      document.getElementById('photo-wrap').classList.add('has-file');
+      var n = document.getElementById('photo-name');
+      n.style.display = 'block';
+      n.textContent = 'تم تجهيز الصورة: ' + file.name;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 </script>
 </body>
 </html>
