@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نموذج بيانات الطلبة - تكية أم علي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:  #1a6b3c; --green-l: #2d9b5a; --green-p: #e8f5ee;
+  --blue:   #1d4e89; --blue-l:  #2563ab; --blue-p:  #e8f0fa;
+  --brown:  #7b3f00; --brown-l: #a05a20; --brown-p: #fdf0e6;
+  --purple: #6b2d8b; --purple-l:#8b3dab; --purple-p:#f5eafa;
+  --orange: #b5451b; --orange-l:#d4622a; --orange-p:#fdf0eb;
+  --dark: #1a1a1a; --gray: #6b7280; --gray-l: #f3f4f6;
+  --white: #fff; --border: #d1d5db; --error: #dc2626;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Cairo',sans-serif;
+  background: linear-gradient(160deg,#f0f7f3,#eef3fa,#f5f0fb);
+  min-height:100vh; color:var(--dark); padding:28px 14px;
+}
+.page-header { text-align:center; margin-bottom:36px; }
+.logo { width:150px; height:150px; background:linear-gradient(135deg,var(--green),var(--green-l));
+  border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+  font-size:28px; margin-bottom:10px; box-shadow:0 4px 16px rgba(26,107,60,.3); }
+h1 { font-size:26px; font-weight:900; color:var(--green); margin-bottom:4px; }
+.subtitle { font-size:13px; color:var(--gray); }
+.divider { width:80px; height:3px; background:linear-gradient(90deg,var(--green),#c9a227);
+  border-radius:2px; margin:12px auto 0; }
+
+form { max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:24px; }
+
+.card { background:var(--white); border-radius:18px; overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,.07); border:1px solid rgba(0,0,0,.06); }
+.card-head { padding:14px 24px; display:flex; align-items:center; gap:10px; color:#fff; }
+.card-head .ico { font-size:20px; }
+.card-head .ttl { font-size:16px; font-weight:700; }
+.card-body { padding:22px 24px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.card-body.cols3 { grid-template-columns:1fr 1fr 1fr; }
+.card-body.cols1 { grid-template-columns:1fr; }
+
+.c-green  .card-head { background:linear-gradient(135deg,var(--green),var(--green-l)); }
+.c-blue   .card-head { background:linear-gradient(135deg,var(--blue),var(--blue-l)); }
+.c-brown  .card-head { background:linear-gradient(135deg,var(--brown),var(--brown-l)); }
+.c-purple .card-head { background:linear-gradient(135deg,var(--purple),var(--purple-l)); }
+.c-orange .card-head { background:linear-gradient(135deg,var(--orange),var(--orange-l)); }
+
+.fg { display:flex; flex-direction:column; gap:5px; }
+.fg.full { grid-column:1/-1; }
+label { font-size:12.5px; font-weight:700; color:var(--dark); display:flex; align-items:center; gap:5px; }
+.req { color:var(--error); font-size:14px; }
+input,select,textarea {
+  width:100%; padding:10px 13px; border:1.5px solid var(--border);
+  border-radius:9px; font-family:'Cairo',sans-serif; font-size:13.5px;
+  color:var(--dark); background:var(--gray-l); transition:all .2s; outline:none;
+}
+input:focus,select:focus,textarea:focus {
+  border-color:#60a5fa; background:#fff; box-shadow:0 0 0 3px rgba(96,165,250,.15);
+}
+input.err,select.err,textarea.err { border-color:var(--error); background:#fff5f5; }
+.hint { font-size:11px; color:var(--gray); }
+.emsg { font-size:11.5px; color:var(--error); font-weight:700; display:none; }
+.emsg.show { display:block; }
+textarea { resize:vertical; min-height:72px; }
+
+.wa-row { display:flex; gap:8px; align-items:flex-start; }
+.wa-row select { width:110px; flex-shrink:0; }
+.wa-row input { flex:1; }
+
+.submit-wrap { text-align:center; padding-bottom:8px; }
+.btn {
+  background:linear-gradient(135deg,var(--green),var(--green-l));
+  color:#fff; border:none; padding:15px 52px; font-size:16px; font-weight:700;
+  font-family:'Cairo',sans-serif; border-radius:50px; cursor:pointer;
+  box-shadow:0 6px 24px rgba(26,107,60,.35); transition:all .25s;
+}
+.btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(26,107,60,.42); }
+.btn:disabled { opacity:.65; cursor:not-allowed; transform:none; }
+.btn .spin { display:none; width:16px; height:16px; border:3px solid rgba(255,255,255,.4);
+  border-top-color:#fff; border-radius:50%; animation:sp .7s linear infinite;
+  vertical-align:middle; margin-left:8px; }
+.btn.loading .spin { display:inline-block; }
+.btn.loading .btxt { display:none; }
+@keyframes sp { to { transform:rotate(360deg); } }
+
+.toast {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-130px);
+  padding:14px 26px; border-radius:12px; font-size:14px; font-weight:700;
+  font-family:'Cairo',sans-serif; z-index:9999; transition:transform .4s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 8px 28px rgba(0,0,0,.2); max-width:90vw; text-align:center;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.ok { background:var(--green); color:#fff; }
+.toast.fail { background:var(--error); color:#fff; }
+
+.note { background:#fffbeb; border:1px solid #fcd34d; border-radius:10px;
+  padding:12px 18px; font-size:12.5px; color:#92400e;
+  max-width:900px; margin:0 auto 4px; }
+
+@media(max-width:640px){
+  .card-body,.card-body.cols3 { grid-template-columns:1fr; }
+  h1 { font-size:20px; }
+  .btn { padding:13px 32px; font-size:14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="logo"><img src="logo.png" width="100" height="100" alt=""></div>
+  <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">تكية أم علي</div>
+  <h1>نموذج بيانات الطلبة المستفيدين</h1>
+  <h1>مخيم كنعان</h1>
+  <p class="subtitle">النقاط التعليمية</p>
+  <div class="divider"></div>
+</div>
+
+<div class="note">⚠️ الحقول المعلّمة بـ <span style="color:red;font-weight:700">*</span> إلزامية. تحقق من البيانات قبل الإرسال.</div>
+
+<form id="frm" novalidate>
+
+<!-- ════ 1: معلومات الطالب ════ -->
+<div class="card c-green">
+  <div class="card-head"><span class="ico">🎓</span><span class="ttl">معلومات الطالب الأساسية</span></div>
+  <div class="card-body">
+    <div class="fg full">
+      <label>الاسم الرباعي للطالب <span class="req">*</span></label>
+      <input type="text" id="اسم_الطالب" placeholder="أدخل الاسم الرباعي كاملاً" required>
+      <span class="emsg" id="e_اسم_الطالب">⚠ يرجى إدخال الاسم الرباعي</span>
+    </div>
+    <div class="fg">
+      <label>رقم هوية الطالب <span class="req">*</span></label>
+      <input type="text" id="رقم_هوية_الطالب" placeholder="9 أرقام" maxlength="9" inputmode="numeric" required>
+      <span class="hint">9 خانات بالضبط</span>
+      <span class="emsg" id="e_رقم_هوية_الطالب">⚠ يجب أن يكون 9 أرقام</span>
+    </div>
+    <div class="fg">
+      <label>تاريخ الميلاد <span class="req">*</span></label>
+      <input type="date" id="تاريخ_ميلاد_الطالب" required>
+      <span class="emsg" id="e_تاريخ_ميلاد_الطالب">⚠ يرجى إدخال تاريخ الميلاد</span>
+    </div>
+    <div class="fg">
+      <label>الحالة الصحية</label>
+      <select id="الحالة_الصحية_الطالب">
+        <option value="">-- اختر --</option>
+        <option>سليم</option><option>مريض</option><option>ذوي إعاقة</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>وصف الحالة الصحية</label>
+      <input type="text" id="وصف_الحالة_الصحية_الطالب" placeholder="اختياري">
+    </div>
+    <div class="fg">
+      <label>هل الطالب على مقاعد الدراسة؟ <span class="req">*</span></label>
+      <select id="هل_على_مقاعد_الدراسة" required>
+        <option value="">-- اختر --</option>
+        <option>نعم</option><option>لا</option>
+      </select>
+      <span class="emsg" id="e_هل_على_مقاعد_الدراسة">⚠ يرجى التحديد</span>
+    </div>
+    <div class="fg">
+      <label>المستوى التعليمي <span class="req">*</span></label>
+      <select id="المستوى_التعليمي" required>
+        <option value="">-- اختر --</option>
+        <option>روضة</option><option>ابتدائي</option><option>إعدادي</option>
+        <option>ثانوي</option><option>جامعي</option><option>دراسات عليا</option>
+      </select>
+      <span class="emsg" id="e_المستوى_التعليمي">⚠ يرجى الاختيار</span>
+    </div>
+    <div class="fg">
+      <label>السنة الدراسية <span class="req">*</span></label>
+      <select id="السنة_الدراسية" required>
+        <option value="">-- اختر --</option>
+        <option>الأول</option><option>الثاني</option><option>الثالث</option>
+        <option>الرابع</option><option>الخامس</option><option>السادس</option>
+        <option>السابع</option><option>الثامن</option><option>التاسع</option>
+        <option>العاشر</option><option>الحادي عشر</option><option>الثاني عشر</option>
+        <option>السنة الأولى جامعي</option><option>السنة الثانية جامعي</option>
+        <option>السنة الثالثة جامعي</option><option>السنة الرابعة جامعي</option>
+        <option>السنة الخامسة جامعي</option><option>ماجستير</option><option>دكتوراه</option>
+      </select>
+      <span class="emsg" id="e_السنة_الدراسية">⚠ يرجى الاختيار</span>
+    </div>
+    <div class="fg">
+      <label>صلة القرابة لرب الأسرة <span class="req">*</span></label>
+      <select id="صلة_القرابة_لرب_الأسرة" required>
+        <option value="">-- اختر --</option>
+        <option>ابن</option><option>ابنة</option><option>حفيد</option>
+        <option>حفيدة</option><option>أخ</option><option>أخت</option><option>أخرى</option>
+      </select>
+      <span class="emsg" id="e_صلة_القرابة_لرب_الأسرة">⚠ يرجى التحديد</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 2: معلومات رب الأسرة ════ -->
+<div class="card c-blue">
+  <div class="card-head"><span class="ico">👨‍👩‍👧‍👦</span><span class="ttl">معلومات رب الأسرة</span></div>
+  <div class="card-body">
+    <div class="fg full">
+      <label>اسم رب الأسرة <span class="req">*</span></label>
+      <input type="text" id="اسم_رب_الأسرة" placeholder="الاسم الكامل" required>
+      <span class="emsg" id="e_اسم_رب_الأسرة">⚠ يرجى إدخال الاسم</span>
+    </div>
+    <div class="fg">
+      <label>رقم هوية رب الأسرة <span class="req">*</span></label>
+      <input type="text" id="رقم_هوية_رب_الأسرة" placeholder="9 أرقام" maxlength="9" inputmode="numeric" required>
+      <span class="hint">9 خانات بالضبط</span>
+      <span class="emsg" id="e_رقم_هوية_رب_الأسرة">⚠ يجب أن يكون 9 أرقام</span>
+    </div>
+    <div class="fg">
+      <label>تاريخ الميلاد <span class="req">*</span></label>
+      <input type="date" id="تاريخ_ميلاد_رب_الأسرة" required>
+      <span class="emsg" id="e_تاريخ_ميلاد_رب_الأسرة">⚠ يرجى إدخال تاريخ الميلاد</span>
+    </div>
+    <div class="fg">
+      <label>الحالة الاجتماعية <span class="req">*</span></label>
+      <select id="الحالة_الاجتماعية" required>
+        <option value="">-- اختر --</option>
+        <option>أعزب</option><option>متزوج</option><option>مطلق</option><option>أرمل</option>
+      </select>
+      <span class="emsg" id="e_الحالة_الاجتماعية">⚠ يرجى الاختيار</span>
+    </div>
+    <div class="fg">
+      <label>رقم جوال 1 <span class="req">*</span></label>
+      <input type="text" id="رقم_جوال_1" placeholder="10 أرقام" maxlength="10" inputmode="tel" required>
+      <span class="hint">10 خانات</span>
+      <span class="emsg" id="e_رقم_جوال_1">⚠ يجب أن يكون 10 أرقام</span>
+    </div>
+    <div class="fg">
+      <label>رقم جوال 2</label>
+      <input type="text" id="رقم_جوال_2" placeholder="10 أرقام — مختلف عن رقم 1" maxlength="10" inputmode="tel">
+      <span class="emsg" id="e_رقم_جوال_2">⚠ غير صحيح أو مكرر</span>
+    </div>
+    <div class="fg">
+      <label>رقم جوال 3</label>
+      <input type="text" id="رقم_جوال_3" placeholder="10 أرقام — مختلف عن رقمي 1 و 2" maxlength="10" inputmode="tel">
+      <span class="emsg" id="e_رقم_جوال_3">⚠ غير صحيح أو مكرر</span>
+    </div>
+    <div class="fg">
+      <label>رقم واتساب</label>
+      <div class="wa-row">
+        <select id="wa_prefix"><option value="+970">+970</option><option value="+972">+972</option></select>
+        <input type="text" id="رقم_واتساب" placeholder="10 أرقام بدون مقدمة الدولة" maxlength="10" inputmode="tel">
+      </div>
+      <span class="emsg" id="e_رقم_واتساب">⚠ رقم غير صحيح</span>
+    </div>
+    <div class="fg">
+      <label>الحالة الصحية لرب الأسرة</label>
+      <select id="الحالة_الصحية_رب_الأسرة">
+        <option value="">-- اختر --</option>
+        <option>سليم</option><option>مريض</option><option>ذوي إعاقة</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>وصف الحالة الصحية</label>
+      <input type="text" id="وصف_الحالة_الصحية_رب_الأسرة" placeholder="اختياري">
+    </div>
+    <div class="fg">
+      <label>مؤهل للعمل</label>
+      <select id="مؤهل_للعمل">
+        <option value="">-- اختر --</option><option>نعم</option><option>لا</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>الدخل الشهري (₪)</label>
+      <input type="number" id="الدخل" placeholder="0" min="0">
+    </div>
+    <div class="fg">
+      <label>عدد أفراد الأسرة <span class="req">*</span></label>
+      <input type="number" id="عدد_أفراد_الأسرة" placeholder="عدد الأفراد" min="1" required>
+      <span class="emsg" id="e_عدد_أفراد_الأسرة">⚠ يرجى إدخال العدد</span>
+    </div>
+    <div class="fg">
+      <label>عدد المعالين</label>
+      <input type="number" id="عدد_المعالين" placeholder="0" min="0">
+    </div>
+    <div class="fg">
+      <label>صلة القرابة للمعالين</label>
+      <input type="text" id="صلة_القرابة_للمعالين" placeholder="مثال: أبناء، زوجة...">
+    </div>
+    <div class="fg">
+      <label>المستوى التعليمي للمعالين</label>
+      <input type="text" id="المستوى_التعليمي_للمعالين" placeholder="اختياري">
+    </div>
+    <div class="fg full">
+      <label>ملاحظات عامة</label>
+      <textarea id="ملاحظات" placeholder="أي ملاحظات إضافية..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 3: حالة السكن ════ -->
+<div class="card c-brown">
+  <div class="card-head"><span class="ico">🏠</span><span class="ttl">حالة السكن</span></div>
+  <div class="card-body">
+    <div class="fg">
+      <label>حالة المنزل <span class="req">*</span></label>
+      <select id="حالة_المنزل" required>
+        <option value="">-- اختر --</option>
+        <option>سليم</option><option>ضرر جزئي</option><option>هدم كلي</option>
+      </select>
+      <span class="emsg" id="e_حالة_المنزل">⚠ يرجى الاختيار</span>
+    </div>
+    <div class="fg">
+      <label>طبيعة المسكن الحالي</label>
+      <select id="طبيعة_المسكن_الحالي">
+        <option value="">-- اختر --</option>
+        <option>ملك</option><option>إيجار</option><option>مؤقت (نازح)</option>
+        <option>لدى أهل</option><option>أخرى</option>
+      </select>
+    </div>
+    <div class="fg full">
+      <label>العنوان بالتفصيل <span class="req">*</span></label>
+      <textarea id="العنوان" placeholder="المدينة / البلدة / الحي / الشارع / رقم المنزل..." required></textarea>
+      <span class="emsg" id="e_العنوان">⚠ يرجى إدخال العنوان</span>
+    </div>
+    <div class="fg full">
+      <label>ملاحظات على السكن</label>
+      <textarea id="ملاحظات_السكن" placeholder="اختياري..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 4: الدعم النفسي ════ -->
+<div class="card c-purple">
+  <div class="card-head"><span class="ico">🧠</span><span class="ttl">الأسئلة التفصيلية — الدعم النفسي</span></div>
+  <div class="card-body">
+    <div class="fg">
+      <label>هواية الطفل</label>
+      <input type="text" id="هواية_الطفل" placeholder="مثال: رسم، كرة قدم...">
+    </div>
+    <div class="fg">
+      <label>المهنة التي يحلم بها</label>
+      <input type="text" id="المهنة_التي_يحلم_بها" placeholder="مثال: طبيب، مهندس...">
+    </div>
+    <div class="fg">
+      <label>أكثر ما افتقده بسبب الحرب</label>
+      <input type="text" id="أكثر_ما_افتقده_بسبب_الحرب" placeholder="مثال: المدرسة، الأصدقاء...">
+    </div>
+    <div class="fg">
+      <label>عدد سنوات الانقطاع عن التعليم</label>
+      <input type="number" id="عدد_سنوات_الانقطاع" placeholder="0" min="0" max="20">
+    </div>
+    <div class="fg">
+      <label>هل يشعر أنه يحتاج دعم نفسي</label>
+      <select id="يحتاج_دعم_نفسي">
+        <option value="">-- اختر --</option><option>نعم</option><option>لا</option><option>لا أعرف</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>المادة الدراسية المفضّلة</label>
+      <input type="text" id="المادة_المفضلة" placeholder="مثال: رياضيات، لغة عربية...">
+    </div>
+    <div class="fg full">
+      <label>ماذا يفعل بيومه</label>
+      <textarea id="ماذا_يفعل_بيومه" placeholder="وصف ليوم الطفل اليومي..."></textarea>
+    </div>
+    <div class="fg full">
+      <label>الهوايات</label>
+      <input type="text" id="الهوايات" placeholder="هوايات متعددة مفصولة بفاصلة">
+    </div>
+    <div class="fg full">
+      <label>إجابة الطفل: «ما حلمك عندما تكبر»</label>
+      <textarea id="حلم_الطفل" placeholder="إجابة الطفل بكلامه..."></textarea>
+    </div>
+    <div class="fg full">
+      <label>رسالة قصيرة من الطفل أو الأسرة</label>
+      <textarea id="رسالة_الطفل" placeholder="كلمة من الأم أو المعيل أو الطفل..."></textarea>
+    </div>
+    <div class="fg">
+      <label>رابط صورة الطفل</label>
+      <input type="url" id="صورة_الطفل" placeholder="https://...">
+      <span class="hint">رابط الصورة إن وجد</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ 5: الحالة الصحية التفصيلية ════ -->
+<div class="card c-orange">
+  <div class="card-head"><span class="ico">🏥</span><span class="ttl">الأسئلة التفصيلية — الحالة الصحية</span></div>
+  <div class="card-body cols1">
+    <div class="fg">
+      <label>نوع الإصابة وتأثيرها على الحركة أو التعلم</label>
+      <textarea id="نوع_الإصابة" placeholder="وصف الإصابة وتأثيرها..."></textarea>
+    </div>
+    <div class="fg">
+      <label>هل الإصابة دائمة أم قابلة للعلاج؟</label>
+      <select id="طبيعة_الإصابة">
+        <option value="">-- اختر --</option>
+        <option>دائمة</option><option>قابلة للعلاج</option><option>غير محدد</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>هل يحتاج علاج طبيعي أو أجهزة مساعدة</label>
+      <select id="يحتاج_علاج_طبيعي">
+        <option value="">-- اختر --</option>
+        <option>نعم — علاج طبيعي</option><option>نعم — أجهزة مساعدة</option>
+        <option>كلاهما</option><option>لا</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="submit-wrap">
+  <button type="submit" class="btn" id="sbtn">
+    <span class="spin"></span>
+    <span class="btxt">💾 حفظ البيانات</span>
+  </button>
+</div>
+
+</form>
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuAhvv6d7TveVLKIshesctn-G1_3GNztzqPKr0QxwhZG4ggdWBWf69wIy_Ur8PEo-S/exec';
+
+const d10 = v => /^\d{10}$/.test(v);
+const d9  = v => /^\d{9}$/.test(v);
+
+function setErr(id, show) {
+  document.getElementById(id)?.classList.toggle('err', show);
+  document.getElementById('e_' + id)?.classList.toggle('show', show);
+  return !show;
+}
+
+function validate() {
+  let ok = true;
+  // الطالب
+  ok &= setErr('اسم_الطالب',              document.getElementById('اسم_الطالب').value.trim().length < 7);
+  ok &= setErr('رقم_هوية_الطالب',         !d9(document.getElementById('رقم_هوية_الطالب').value.trim()));
+  ok &= setErr('تاريخ_ميلاد_الطالب',      !document.getElementById('تاريخ_ميلاد_الطالب').value);
+  ok &= setErr('هل_على_مقاعد_الدراسة',    !document.getElementById('هل_على_مقاعد_الدراسة').value);
+  ok &= setErr('المستوى_التعليمي',         !document.getElementById('المستوى_التعليمي').value);
+  ok &= setErr('السنة_الدراسية',           !document.getElementById('السنة_الدراسية').value);
+  ok &= setErr('صلة_القرابة_لرب_الأسرة',  !document.getElementById('صلة_القرابة_لرب_الأسرة').value);
+  // رب الأسرة
+  ok &= setErr('اسم_رب_الأسرة',           document.getElementById('اسم_رب_الأسرة').value.trim().length < 5);
+  ok &= setErr('رقم_هوية_رب_الأسرة',      !d9(document.getElementById('رقم_هوية_رب_الأسرة').value.trim()));
+  ok &= setErr('تاريخ_ميلاد_رب_الأسرة',   !document.getElementById('تاريخ_ميلاد_رب_الأسرة').value);
+  ok &= setErr('الحالة_الاجتماعية',        !document.getElementById('الحالة_الاجتماعية').value);
+  const p1 = document.getElementById('رقم_جوال_1').value.trim();
+  ok &= setErr('رقم_جوال_1', !d10(p1));
+  const p2 = document.getElementById('رقم_جوال_2').value.trim();
+  if (p2) ok &= setErr('رقم_جوال_2', !d10(p2) || p2===p1); else setErr('رقم_جوال_2',false);
+  const p3 = document.getElementById('رقم_جوال_3').value.trim();
+  if (p3) ok &= setErr('رقم_جوال_3', !d10(p3) || p3===p1 || p3===p2); else setErr('رقم_جوال_3',false);
+  const wa = document.getElementById('رقم_واتساب').value.trim();
+  if (wa) ok &= setErr('رقم_واتساب', !d10(wa)); else setErr('رقم_واتساب',false);
+  ok &= setErr('عدد_أفراد_الأسرة', !document.getElementById('عدد_أفراد_الأسرة').value || parseInt(document.getElementById('عدد_أفراد_الأسرة').value)<1);
+  // سكن
+  ok &= setErr('حالة_المنزل', !document.getElementById('حالة_المنزل').value);
+  ok &= setErr('العنوان',      document.getElementById('العنوان').value.trim().length < 5);
+  return !!ok;
+}
+
+// حقول أرقام فقط
+['رقم_هوية_الطالب','رقم_هوية_رب_الأسرة','رقم_جوال_1','رقم_جوال_2','رقم_جوال_3','رقم_واتساب']
+  .forEach(id => document.getElementById(id).addEventListener('input', function(){ this.value=this.value.replace(/\D/g,''); }));
+
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = (type==='ok'?'✅ ':'❌ ') + msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(()=>t.classList.remove('show'), 4500);
+}
+
+const IDS = [
+  'اسم_الطالب','رقم_هوية_الطالب','تاريخ_ميلاد_الطالب','الحالة_الصحية_الطالب',
+  'وصف_الحالة_الصحية_الطالب','هل_على_مقاعد_الدراسة','المستوى_التعليمي','السنة_الدراسية',
+  'صلة_القرابة_لرب_الأسرة','اسم_رب_الأسرة','رقم_هوية_رب_الأسرة','تاريخ_ميلاد_رب_الأسرة',
+  'الحالة_الاجتماعية','رقم_جوال_1','رقم_جوال_2','رقم_جوال_3','رقم_واتساب',
+  'الحالة_الصحية_رب_الأسرة','وصف_الحالة_الصحية_رب_الأسرة','مؤهل_للعمل','الدخل',
+  'عدد_أفراد_الأسرة','عدد_المعالين','صلة_القرابة_للمعالين','المستوى_التعليمي_للمعالين',
+  'ملاحظات','حالة_المنزل','طبيعة_المسكن_الحالي','العنوان','ملاحظات_السكن',
+  'هواية_الطفل','المهنة_التي_يحلم_بها','أكثر_ما_افتقده_بسبب_الحرب','عدد_سنوات_الانقطاع',
+  'يحتاج_دعم_نفسي','ماذا_يفعل_بيومه','رسالة_الطفل','صورة_الطفل','الهوايات',
+  'حلم_الطفل','المادة_المفضلة','نوع_الإصابة','طبيعة_الإصابة','يحتاج_علاج_طبيعي'
+];
+
+document.getElementById('frm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!validate()) {
+    toast('يرجى تصحيح الأخطاء أولاً', 'fail');
+    document.querySelector('.err')?.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  const btn = document.getElementById('sbtn');
+  btn.disabled = true; btn.classList.add('loading');
+
+  const data = {};
+  IDS.forEach(id => {
+    const el = document.getElementById(id);
+    data[id] = el ? el.value.trim() : '';
+  });
+
+  // رقم واتساب مع مقدمة الدولة
+  if (data['رقم_واتساب']) {
+    data['رقم_واتساب'] = document.getElementById('wa_prefix').value + data['رقم_واتساب'];
+  }
+
+  try {
+    await fetch(SCRIPT_URL, {
+      method:'POST', body:JSON.stringify(data),
+      headers:{'Content-Type':'application/json'}, mode:'no-cors'
+    });
+    toast('تم حفظ البيانات بنجاح ✨', 'ok');
+    document.getElementById('frm').reset();
+    window.scrollTo({top:0,behavior:'smooth'});
+  } catch(err) {
+    toast('حدث خطأ في الاتصال، حاول مجدداً', 'fail');
+  }
+
+  btn.disabled = false; btn.classList.remove('loading');
+});
+</script>
+</body>
+</html>
