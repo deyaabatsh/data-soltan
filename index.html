@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تكية أم علي — النقاط التعليمية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Cairo',sans-serif;
+  background: linear-gradient(160deg,#f0f7f3,#eef3fa,#f5f0fb);
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+.wrap { text-align:center; max-width:480px; width:100%; }
+.logo-circle {
+  width:120px; height:120px;
+  background:linear-gradient(135deg,#1a6b3c,#2d9b5a);
+  border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+  margin-bottom:18px; box-shadow:0 4px 16px rgba(26,107,60,.3);
+}
+.logo-circle img { width:80px; height:80px; object-fit:contain; }
+h1 { font-size:22px; font-weight:900; color:#1a6b3c; margin-bottom:6px; }
+p { font-size:13px; color:#6b7280; margin-bottom:32px; }
+.cards { display:flex; flex-direction:column; gap:14px; }
+a.card {
+  display:block; padding:18px 24px;
+  background:#fff; border-radius:16px;
+  border:1.5px solid #d1d5db;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  text-decoration:none; color:#1a1a1a;
+  font-size:16px; font-weight:700;
+  transition:all .2s;
+}
+a.card:hover {
+  border-color:#1a6b3c;
+  box-shadow:0 4px 20px rgba(26,107,60,.18);
+  transform:translateY(-2px);
+}
+a.card span { font-size:22px; margin-left:10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-circle"><img src="logo.png" alt="تكية أم علي"></div>
+  <h1>تكية أم علي</h1>
+  <p>اختر المخيم لإدخال بيانات الطلبة</p>
+  <div class="cards">
+    <a class="card" href="student_soltan final.html"><span>🏕️</span> مخيم السلطان</a>
+    <a class="card" href="student_karama.html"><span>🏕️</span> مخيم الكرامة</a>
+    <a class="card" href="student_saftawi.html"><span>🏕️</span> مخيم الصفطاوي</a>
+    <a class="card" href="student_orphans.html"><span>🏕️</span> مخيم رعاية الأيتام</a>
+  </div>
+</div>
+</body>
+</html>
