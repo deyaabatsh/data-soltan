@@ -22,9 +22,9 @@ body {
   min-height:100vh; color:var(--dark); padding:28px 14px;
 }
 .page-header { text-align:center; margin-bottom:36px; }
-.logo { width:150px; height:150px; background:linear-gradient(135deg,var(--green),var(--green-l));
-  border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
-  font-size:28px; margin-bottom:10px; box-shadow:0 4px 16px rgba(26,61,107,.3); }
+.logo { width:150px; height:150px;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:28px; margin-bottom:10px;}
 h1 { font-size:26px; font-weight:900; color:var(--green); margin-bottom:4px; }
 .subtitle { font-size:13px; color:var(--gray); }
 .divider { width:80px; height:3px; background:linear-gradient(90deg,var(--green),#c9a227);
@@ -104,21 +104,104 @@ textarea { resize:vertical; min-height:72px; }
   h1 { font-size:20px; }
   .btn { padding:13px 32px; font-size:14px; }
 }
-.upload-wrap {
-  position:relative; border:2px dashed var(--border); border-radius:9px;
-  padding:18px 12px; text-align:center; background:var(--gray-l);
-  cursor:pointer; transition:border-color .15s,background .15s; overflow:hidden;
+.camera-wrap {
+  border:2px dashed var(--border); border-radius:9px;
+  padding:22px 12px; text-align:center; background:var(--gray-l);
+  overflow:hidden; transition:border-color .15s,background .15s;
 }
-.upload-wrap:hover { border-color:#2563ab; background:#e8f0fa; }
-.upload-wrap.has-file { border-color:#2a7a5a; background:#edf7f2; }
-.upload-wrap input[type=file] {
-  position:absolute; inset:0; opacity:0; cursor:pointer;
-  width:100%; height:100%; border:none; background:none; box-shadow:none; padding:0;
+.camera-wrap.has-photo { border-color:#2a7a5a; background:#edf7f2; }
+.camera-wrap.err { border-color:var(--error) !important; }
+#cam-video {
+  width:100%; max-height:280px; border-radius:8px;
+  object-fit:cover; display:block; background:#000;
 }
-.upload-icon { font-size:24px; margin-bottom:5px; display:block; }
-.upload-text { font-size:12px; color:var(--gray); }
-.upload-hint { font-size:11px; color:var(--gray); margin-top:3px; }
-.file-preview { font-size:12px; color:#2a7a5a; font-weight:500; margin-top:4px; display:none; }
+#cam-preview { width:100%; max-height:280px; object-fit:cover; border-radius:8px; display:block; }
+.cam-idle-icon { font-size:30px; margin-bottom:6px; display:block; }
+.cam-idle-text { font-size:13px; color:var(--gray); margin-bottom:8px; }
+.cam-controls { display:flex; justify-content:center; gap:10px; margin-top:10px; flex-wrap:wrap; }
+.cam-ok-label { color:#2a7a5a; font-weight:700; font-size:13px; line-height:2.2; }
+.cam-btn-open {
+  background:linear-gradient(135deg,var(--green),var(--green-l));
+  color:#fff; border:none; padding:11px 30px; border-radius:50px;
+  font-family:'Cairo',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
+}
+.cam-btn-capture {
+  background:linear-gradient(135deg,#2a7a5a,#3a9a6a);
+  color:#fff; border:none; padding:11px 30px; border-radius:50px;
+  font-family:'Cairo',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
+}
+.cam-btn-secondary {
+  background:#f3f4f6; color:#374151; border:1px solid var(--border);
+  padding:11px 20px; border-radius:50px;
+  font-family:'Cairo',sans-serif; font-size:13px; cursor:pointer;
+}
+/* ── نعم / لا ── */
+.yn-group { display:flex; gap:18px; align-items:center; margin-top:4px; }
+.yn-label { display:flex; align-items:center; gap:6px; font-size:14px; font-weight:600; cursor:pointer; }
+.yn-label input[type=radio] { width:18px; height:18px; accent-color:var(--green); margin:0; flex-shrink:0; padding:0; border:none; box-shadow:none; background:none; }
+/* ── بطاقات الإخوة ── */
+.sibling-card {
+  border:1px solid var(--border); border-radius:12px;
+  padding:16px 16px 12px; background:#fafafa;
+  position:relative; margin-bottom:12px;
+}
+.sibling-card-head {
+  font-size:13px; font-weight:700; color:var(--green);
+  border-right:3px solid var(--green); padding-right:8px;
+  margin-bottom:12px;
+}
+.sibling-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media(max-width:640px){ .sibling-grid { grid-template-columns:1fr; } }
+.sibling-remove {
+  position:absolute; top:12px; left:12px;
+  background:#fee2e2; color:#dc2626; border:none;
+  border-radius:50%; width:26px; height:26px; font-size:13px;
+  cursor:pointer; line-height:26px; text-align:center; padding:0;
+}
+.sibling-add-btn {
+  width:100%; border:2px dashed var(--border); background:transparent;
+  padding:12px; border-radius:10px; font-family:'Cairo',sans-serif;
+  font-size:14px; color:var(--green); cursor:pointer; font-weight:700;
+  transition:all .2s; margin-top:4px;
+}
+.sibling-add-btn:hover { border-color:var(--green); background:var(--green-p); }
+/* ── شاشة فحص الهوية ── */
+#check-screen {
+  position:fixed; inset:0; z-index:700;
+  background:linear-gradient(160deg,#f0f3f7,#eef3fa,#f5f0fb);
+  display:flex; align-items:center; justify-content:center; padding:2rem;
+}
+.check-card {
+  background:#fff; border-radius:20px;
+  box-shadow:0 8px 32px rgba(0,0,0,.12);
+  padding:2.5rem 2rem; max-width:420px; width:100%;
+  text-align:center;
+  border-top:5px solid var(--green);
+}
+.check-card h2 { font-size:20px; font-weight:900; color:var(--green); margin-bottom:6px; }
+.check-card p  { font-size:13px; color:var(--gray); margin-bottom:22px; }
+.check-found {
+  background:#fff7ed; border:1px solid #fb923c; border-radius:12px;
+  padding:14px 16px; margin:16px 0; text-align:right;
+}
+.check-found .cf-title { font-size:14px; font-weight:700; color:#c2410c; margin-bottom:6px; }
+.check-found .cf-name  { font-size:15px; font-weight:900; color:var(--dark); }
+.check-actions { display:flex; gap:10px; margin-top:16px; flex-direction:column; }
+.check-btn-edit {
+  background:linear-gradient(135deg,var(--green),var(--green-l));
+  color:#fff; border:none; padding:13px; border-radius:50px;
+  font-family:'Cairo',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
+  width:100%;
+}
+.check-btn-new {
+  background:#f3f4f6; color:#374151; border:1px solid var(--border);
+  padding:11px; border-radius:50px;
+  font-family:'Cairo',sans-serif; font-size:13px; cursor:pointer; width:100%;
+}
+.check-not-found {
+  background:#f0fdf4; border:1px solid #86efac; border-radius:10px;
+  padding:12px; margin:14px 0; font-size:13px; color:#15803d; font-weight:700;
+}
 #success-screen {
   display:none; position:fixed; inset:0;
   background:linear-gradient(160deg,#f0f3f7,#eef3fa,#f5f0fb);
@@ -167,6 +250,161 @@ textarea { resize:vertical; min-height:72px; }
 .consent-err { font-size:12px; color:var(--error); font-weight:700; display:none; margin:4px 0 0 34px; }
 .consent-err.show { display:block; }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+/* ══════════════════════════════════
+   مودال التعهد
+══════════════════════════════════ */
+#pledge-overlay {
+  display:none; position:fixed; inset:0; z-index:2000;
+  background:rgba(0,0,0,.72); backdrop-filter:blur(3px);
+  align-items:center; justify-content:center; padding:16px;
+}
+#pledge-overlay.open { display:flex; animation:fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+#pledge-modal {
+  background:#fff; border-radius:10px; width:100%; max-width:860px;
+  max-height:92vh; overflow:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  display:flex; flex-direction:column;
+}
+
+#pledge-header {
+  background:linear-gradient(135deg,#1a3d6b,#2563ab);
+  color:#fff; padding:16px 24px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-shrink:0; border-radius:10px 10px 0 0;
+}
+#pledge-header h2 { font-size:16px; font-weight:800; margin:0; }
+#pledge-close {
+  background:rgba(255,255,255,.2); border:none; color:#fff;
+  width:32px; height:32px; border-radius:50%; cursor:pointer;
+  font-size:18px; display:flex; align-items:center; justify-content:center;
+  transition:.2s;
+}
+#pledge-close:hover { background:rgba(255,255,255,.35); }
+
+/* ورقة A4 */
+#pledge-paper {
+  width:794px; min-height:1123px; margin:20px auto;
+  background:#fff; padding:55px 65px 55px 65px;
+  font-family:'Cairo',sans-serif; font-size:14px;
+  color:#111; line-height:2; direction:rtl; text-align:right;
+  box-shadow:0 2px 12px rgba(0,0,0,.12); border:1px solid #e5e7eb;
+  position:relative; flex-shrink:0;
+}
+
+.pledge-logo-row {
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:3px double #1a3d6b; padding-bottom:14px; margin-bottom:20px;
+}
+.pledge-logo-row img { width:80px; height:80px; }
+.pledge-org { text-align:center; }
+.pledge-org .org-name { font-size:17px; font-weight:900; color:#1a3d6b; }
+.pledge-org .org-sub  { font-size:12px; color:#6b7280; }
+.pledge-date-ref { text-align:left; font-size:12px; color:#6b7280; line-height:1.8; }
+
+.pledge-title {
+  text-align:center; font-size:20px; font-weight:900;
+  color:#1a3d6b; margin:22px 0 6px;
+  letter-spacing:.5px;
+}
+.pledge-title-under {
+  text-align:center; font-size:12px; color:#6b7280; margin-bottom:22px;
+}
+
+.pledge-body { font-size:13.5px; line-height:2.2; color:#1a1a1a; }
+.pledge-body .hl { font-weight:800; color:#1a3d6b; }
+.pledge-body .val {
+  display:inline-block;
+  border-bottom:1.5px solid #1a3d6b;
+  min-width:160px; text-align:center;
+  font-weight:700; color:#111;
+  padding:0 6px;
+}
+
+.pledge-items {
+  margin:18px 0; padding:0; list-style:none;
+}
+.pledge-items li {
+  padding:6px 0 6px 0;
+  border-bottom:1px dashed #d1d5db;
+  display:flex; gap:8px; font-size:13px;
+}
+.pledge-items li:last-child { border:none; }
+.pledge-items li::before {
+  content:'✦'; color:#1a3d6b; flex-shrink:0; margin-top:2px;
+}
+
+.pledge-sign-area {
+  margin-top:36px;
+  display:flex; justify-content:space-between; align-items:flex-end;
+}
+.pledge-sign-box { text-align:center; }
+.pledge-sign-box .sign-label { font-size:12px; color:#6b7280; margin-bottom:8px; }
+.pledge-sign-box .sign-line {
+  width:180px; border-bottom:1.5px solid #333;
+  margin:0 auto; height:36px;
+}
+.pledge-sign-box .sign-name { font-size:13px; font-weight:700; margin-top:6px; }
+
+.pledge-auto-notice {
+  margin:18px 0 28px;
+  padding:10px 14px;
+  background:#f0f4fa;
+  border-right:4px solid #2563ab;
+  border-radius:6px;
+  font-size:12.5px;
+  color:#374151;
+  line-height:1.8;
+  text-align:right;
+}
+
+.pledge-footer-bar {
+  position:absolute; bottom:0; left:0; right:0;
+  background:linear-gradient(135deg,#1a3d6b,#2563ab);
+  height:10px; border-radius:0 0 0 0;
+}
+
+/* أزرار أسفل المودال */
+#pledge-actions {
+  padding:16px 24px; border-top:1px solid #e5e7eb;
+  display:flex; gap:12px; justify-content:flex-end; flex-shrink:0;
+  background:#f9fafb; border-radius:0 0 10px 10px;
+}
+.pledge-btn {
+  padding:11px 28px; border:none; border-radius:50px;
+  font-family:'Cairo',sans-serif; font-size:14px; font-weight:700;
+  cursor:pointer; transition:.2s;
+}
+.pledge-btn-confirm {
+  background:linear-gradient(135deg,#1a3d6b,#2563ab); color:#fff;
+  box-shadow:0 4px 14px rgba(26,61,107,.35);
+}
+.pledge-btn-confirm:hover { transform:translateY(-1px); }
+.pledge-btn-confirm:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+.pledge-btn-cancel {
+  background:#f3f4f6; color:#374151; border:1px solid #d1d5db;
+}
+.pledge-btn-cancel:hover { background:#e5e7eb; }
+
+.pledge-processing {
+  text-align:center; padding:12px; font-size:13px; color:#6b7280;
+  display:none;
+}
+.pledge-processing.show { display:block; }
+
+@media(max-width:860px){
+  #pledge-paper {
+    width:100%; min-height:auto;
+    padding:30px 22px;
+  }
+  .pledge-sign-area { flex-direction:column; gap:20px; align-items:center; }
+  .pledge-date-ref { text-align:right; }
+  .pledge-logo-row { flex-direction:column; gap:10px; text-align:center; }
+}
+</style>
 </head>
 <body>
 <div id="success-screen">
@@ -180,12 +418,40 @@ textarea { resize:vertical; min-height:72px; }
 
 
 <div class="page-header">
-  <div class="logo"><img src="logo.png" width="100" height="100" alt=""></div>
+  <div class="logo"><img src="logo.png" width="150" height="150" alt=""></div>
   <div style="font-size:12px;color:var(--gray);margin-bottom:6px;">تكية أم علي</div>
   <h1>نموذج بيانات الطلبة المستفيدين</h1>
   <h1>مخيم كنعان</h1>
   <p class="subtitle">النقاط التعليمية</p>
   <div class="divider"></div>
+</div>
+
+<!-- ══════════ شاشة فحص الهوية ══════════ -->
+<div id="check-screen">
+  <div class="check-card">
+    <div class="logo" style="width:80px;height:80px;font-size:20px;margin:0 auto 14px">
+      <img src="logo.png" width="100" height="100" alt="" onerror="this.style.display='none'">
+    </div>
+    <h2>نموذج بيانات الطلبة</h2>
+    <p>أدخل رقم هوية الطالب ثم اختر العملية</p>
+    <div class="fg" style="text-align:right;margin-bottom:18px">
+      <label>رقم هوية الطالب <span class="req">*</span></label>
+      <input type="text" id="check-id-input" placeholder="9 أرقام" maxlength="9" inputmode="numeric"
+             oninput="this.value=this.value.replace(/\D/g,''); document.getElementById('check-result').innerHTML=''">
+      <span class="emsg" id="check-id-err" style="display:none">⚠ يرجى إدخال 9 أرقام</span>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="check-btn-edit" id="btn-register" onclick="handleAction('new')" style="flex:1">
+        <span class="spin" style="display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-left:6px"></span>
+        <span>📝 تسجيل جديد</span>
+      </button>
+      <button class="check-btn-new" id="btn-edit" onclick="handleAction('edit')" style="flex:1;padding:13px">
+        <span class="spin" style="display:none;width:14px;height:14px;border:2px solid rgba(55,65,81,.3);border-top-color:#374151;border-radius:50%;animation:sp .7s linear infinite;vertical-align:middle;margin-left:6px"></span>
+        <span>✏️ تعديل البيانات</span>
+      </button>
+    </div>
+    <div id="check-result" style="margin-top:14px"></div>
+  </div>
 </div>
 
 <div class="note">⚠️ الحقول المعلّمة بـ <span style="color:red;font-weight:700">*</span> إلزامية. تحقق من البيانات قبل الإرسال.</div>
@@ -198,8 +464,25 @@ textarea { resize:vertical; min-height:72px; }
   <div class="card-body">
     <div class="fg full">
       <label>الاسم الرباعي للطالب <span class="req">*</span></label>
-      <input type="text" id="اسم_الطالب" placeholder="أدخل الاسم الرباعي كاملاً" required>
-      <span class="emsg" id="e_اسم_الطالب">⚠ يرجى إدخال الاسم الرباعي</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">الاسم الأول</label>
+          <input type="text" id="الاسم_الأول_الطالب" placeholder="الاسم الأول">
+        </div>
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">الاسم الثاني</label>
+          <input type="text" id="الاسم_الثاني_الطالب" placeholder="الاسم الثاني">
+        </div>
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">الاسم الثالث</label>
+          <input type="text" id="الاسم_الثالث_الطالب" placeholder="الاسم الثالث">
+        </div>
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">اسم العائلة</label>
+          <input type="text" id="الاسم_الرابع_الطالب" placeholder="اسم العائلة">
+        </div>
+      </div>
+      <span class="emsg" id="e_اسم_الطالب">⚠ يرجى إدخال الاسم الرباعي كاملاً</span>
     </div>
     <div class="fg">
       <label>رقم هوية الطالب <span class="req">*</span></label>
@@ -216,7 +499,7 @@ textarea { resize:vertical; min-height:72px; }
       <label>الحالة الصحية <span class="req">*</span></label>
       <select id="الحالة_الصحية_الطالب">
         <option value="">-- اختر --</option>
-        <option>سليم</option><option>مريض</option><option>ذوي إعاقة</option>
+        <option>سليم</option><option>مريض</option><option>مصاب</option>
       </select>
     </div>
     <div class="fg">
@@ -233,23 +516,27 @@ textarea { resize:vertical; min-height:72px; }
     </div>
     <div class="fg">
       <label>المستوى التعليمي <span class="req">*</span></label>
-      <select id="المستوى_التعليمي" required>
+      <select id="المستوى_التعليمي" required onchange="filterGrades(this.value)">
         <option value="">-- اختر --</option>
-        <option>روضة</option><option>ابتدائي</option><option>إعدادي</option>
+        <option>رياض الأطفال</option><option>ابتدائي</option><option>إعدادي</option>
         <option>ثانوي</option>
       </select>
       <span class="emsg" id="e_المستوى_التعليمي">⚠ يرجى الاختيار</span>
     </div>
     <div class="fg">
       <label>السنة الدراسية <span class="req">*</span></label>
-      <select id="السنة_الدراسية" required>
-        <option value="">-- اختر --</option>
-        <option>الأول</option><option>الثاني</option><option>الثالث</option>
-        <option>الرابع</option><option>الخامس</option><option>السادس</option>
-        <option>السابع</option><option>الثامن</option><option>التاسع</option>
-        <option>العاشر</option><option>الحادي عشر</option><option>الثاني عشر</option>
+      <select id="السنة_الدراسية" required disabled>
+        <option value="">-- اختر المستوى أولاً --</option>
       </select>
       <span class="emsg" id="e_السنة_الدراسية">⚠ يرجى الاختيار</span>
+    </div>
+    <div class="fg">
+      <label>هل الطالب يتيم؟ <span class="req">*</span></label>
+      <select id="هل_الطالب_يتيم">
+        <option value="">-- اختر --</option>
+        <option>نعم</option>
+        <option>لا</option>
+      </select>
     </div>
     <div class="fg">
       <label>صلة القرابة لرب الأسرة <span class="req">*</span></label>
@@ -264,13 +551,30 @@ textarea { resize:vertical; min-height:72px; }
 </div>
 
 <!-- ════ 2: معلومات رب الأسرة ════ -->
-<div class="card c-blue">
+<div class="card c-green">
   <div class="card-head"><span class="ico">👨‍👩‍👧‍👦</span><span class="ttl">معلومات رب الأسرة</span></div>
   <div class="card-body">
     <div class="fg full">
       <label>اسم رب الأسرة <span class="req">*</span></label>
-      <input type="text" id="اسم_رب_الأسرة" placeholder="الاسم الكامل" required>
-      <span class="emsg" id="e_اسم_رب_الأسرة">⚠ يرجى إدخال الاسم</span>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">الاسم الأول</label>
+          <input type="text" id="الاسم_الأول_رب_الأسرة" placeholder="الاسم الأول">
+        </div>
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">الاسم الثاني</label>
+          <input type="text" id="الاسم_الثاني_رب_الأسرة" placeholder="الاسم الثاني">
+        </div>
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">الاسم الثالث</label>
+          <input type="text" id="الاسم_الثالث_رب_الأسرة" placeholder="الاسم الثالث">
+        </div>
+        <div class="fg">
+          <label style="font-weight:500;font-size:11.5px;color:var(--gray)">اسم العائلة</label>
+          <input type="text" id="الاسم_الرابع_رب_الأسرة" placeholder="اسم العائلة">
+        </div>
+      </div>
+      <span class="emsg" id="e_اسم_رب_الأسرة">⚠ يرجى إدخال الاسم الرباعي كاملاً</span>
     </div>
     <div class="fg">
       <label>رقم هوية رب الأسرة <span class="req">*</span></label>
@@ -285,11 +589,18 @@ textarea { resize:vertical; min-height:72px; }
     </div>
     <div class="fg">
       <label>الحالة الاجتماعية <span class="req">*</span></label>
-      <select id="الحالة_الاجتماعية" required>
+      <select id="الحالة_الاجتماعية" required onchange="togglePolygamy(this.value)">
         <option value="">-- اختر --</option>
-        <option>أعزب</option><option>متزوج</option><option>مطلق</option><option>أرمل</option>
+        <option>أعزب/عزباء</option><option>متزوج/ة</option><option>مطلق/ة</option><option>أرمل/ة</option>
       </select>
       <span class="emsg" id="e_الحالة_الاجتماعية">⚠ يرجى الاختيار</span>
+    </div>
+    <div class="fg" id="fg_تعدد_زوجات" style="display:none">
+      <label>هل هناك تعدد زوجات؟ <span class="req">*</span></label>
+      <div class="yn-group">
+        <label class="yn-label"><input type="radio" name="تعدد_زوجات" value="نعم"> نعم</label>
+        <label class="yn-label"><input type="radio" name="تعدد_زوجات" value="لا" checked> لا</label>
+      </div>
     </div>
     <div class="fg">
       <label>رقم جوال 1 <span class="req">*</span></label>
@@ -319,7 +630,7 @@ textarea { resize:vertical; min-height:72px; }
       <label>الحالة الصحية لرب الأسرة <span class="req">*</span></label>
       <select id="الحالة_الصحية_رب_الأسرة">
         <option value="">-- اختر --</option>
-        <option>سليم</option><option>مريض</option><option>ذوي إعاقة</option>
+        <option>سليم</option><option>مريض</option><option>مصاب</option>
       </select>
     </div>
     <div class="fg">
@@ -342,16 +653,23 @@ textarea { resize:vertical; min-height:72px; }
       <span class="emsg" id="e_عدد_أفراد_الأسرة">⚠ يرجى إدخال العدد</span>
     </div>
     <div class="fg">
-      <label>عدد المعالين <span class="req">*</span></label>
-      <input type="number" id="عدد_المعالين" placeholder="0" min="0">
+      <label>عدد المعالين</label>
+      <input type="number" id="عدد_المعالين" placeholder="0" min="0" max="20" oninput="generateDependents(this.value)">
+      <span class="hint">أدخل العدد لتظهر خانات بيانات المعالين</span>
+    </div>
+    <div class="fg full" id="dependents-section" style="display:none">
+      <div style="border-top:2px solid var(--border);margin:4px 0 14px;"></div>
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:12px;border-right:3px solid var(--green);padding-right:8px;">بيانات المعالين</div>
+      <div id="dependents-container"></div>
     </div>
     <div class="fg">
-      <label>صلة القرابة للمعالين</label>
-      <input type="text" id="صلة_القرابة_للمعالين" placeholder="مثال: أبناء، زوجة...">
-    </div>
-    <div class="fg">
-      <label>المستوى التعليمي للمعالين</label>
-      <input type="text" id="المستوى_التعليمي_للمعالين" placeholder="اختياري">
+      <label>المستوى التعليمي لرب الأسرة</label>
+      <select id="المستوى_التعليمي_رب_الأسرة">
+        <option value="">-- اختر --</option>
+        <option>أمّي / لا يقرأ ولا يكتب</option><option>يقرأ و يكتب</option>
+        <option>ابتدائي</option><option>إعدادي</option><option>ثانوي</option>
+        <option>دبلوم</option><option>باكلوريوس</option><option>ماجستير</option><option>دكتوراه</option>
+      </select>
     </div>
     <div class="fg full">
       <label>ملاحظات عامة</label>
@@ -361,14 +679,14 @@ textarea { resize:vertical; min-height:72px; }
 </div>
 
 <!-- ════ 3: حالة السكن ════ -->
-<div class="card c-brown">
+<div class="card c-green">
   <div class="card-head"><span class="ico">🏠</span><span class="ttl">حالة السكن</span></div>
   <div class="card-body">
     <div class="fg">
       <label>حالة المنزل <span class="req">*</span></label>
       <select id="حالة_المنزل" required>
         <option value="">-- اختر --</option>
-        <option>سليم</option><option>ضرر جزئي</option><option>هدم كلي</option>
+        <option>ضرر كلي</option><option>ضرر جزئي بليغ</option><option>ضرر جزئي قابل للسكن</option><option>سليم</option>
       </select>
       <span class="emsg" id="e_حالة_المنزل">⚠ يرجى الاختيار</span>
     </div>
@@ -376,8 +694,8 @@ textarea { resize:vertical; min-height:72px; }
       <label>طبيعة المسكن الحالي <span class="req">*</span></label>
       <select id="طبيعة_المسكن_الحالي">
         <option value="">-- اختر --</option>
-        <option>ملك</option><option>إيجار</option><option>مؤقت (نازح)</option>
-        <option>لدى أهل</option><option>أخرى</option>
+        <option>نازح في خيمة</option><option>نازح في الإيجار</option><option>في المنزل نفسه</option>
+        <option>نازح عند أقارب</option><option>أخرى</option>
       </select>
     </div>
     <div class="fg full">
@@ -393,7 +711,7 @@ textarea { resize:vertical; min-height:72px; }
 </div>
 
 <!-- ════ 4: الدعم النفسي ════ -->
-<div class="card c-purple">
+<div class="card c-green">
   <div class="card-head"><span class="ico">🧠</span><span class="ttl">الأسئلة التفصيلية — الدعم النفسي</span></div>
   <div class="card-body">
     <div class="fg">
@@ -440,19 +758,33 @@ textarea { resize:vertical; min-height:72px; }
     </div>
     <div class="fg">
       <label>صورة الطفل <span class="req">*</span></label>
-      <div class="upload-wrap" id="photo-wrap">
-        <input type="file" accept="image/*" onchange="handlePhotoUpload(this)">
-        <span class="upload-icon">🖼️</span>
-        <div class="upload-text">اضغط لرفع صورة الطفل</div>
-        <div class="upload-hint">JPG, PNG — حد أقصى 5MB</div>
-        <div class="file-preview" id="photo-name"></div>
+      <div class="camera-wrap" id="photo-wrap">
+        <div id="cam-idle">
+          <span class="cam-idle-icon">📷</span>
+          <div class="cam-idle-text">اضغط لفتح الكاميرا والتصوير</div>
+          <button type="button" class="cam-btn-open" onclick="openCamera()">فتح الكاميرا</button>
+        </div>
+        <div id="cam-active" style="display:none">
+          <video id="cam-video" autoplay playsinline muted></video>
+          <div class="cam-controls">
+            <button type="button" class="cam-btn-capture" onclick="capturePhoto()">📸 التقاط الصورة</button>
+            <button type="button" class="cam-btn-secondary" onclick="closeCamera()">✕ إغلاق</button>
+          </div>
+        </div>
+        <div id="cam-result" style="display:none">
+          <img id="cam-preview" alt="صورة الطفل">
+          <div class="cam-controls">
+            <span class="cam-ok-label">✅ تم التقاط الصورة</span>
+            <button type="button" class="cam-btn-secondary" onclick="retakePhoto()">🔄 إعادة التصوير</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ════ 5: الحالة الصحية التفصيلية ════ -->
-<div class="card c-orange">
+<div class="card c-green">
   <div class="card-head"><span class="ico">🏥</span><span class="ttl">الأسئلة التفصيلية — الحالة الصحية</span></div>
   <div class="card-body cols1">
     <div class="fg">
@@ -474,6 +806,18 @@ textarea { resize:vertical; min-height:72px; }
         <option>كلاهما</option><option>لا</option>
       </select>
     </div>
+    <div class="fg">
+      <label>هل يوجد أمراض متعلقة بالغذاء (حساسية)؟</label>
+      <select id="حساسية_غذائية" onchange="toggleFoodAllergy(this.value)">
+        <option value="">-- اختر --</option>
+        <option>نعم</option>
+        <option>لا</option>
+      </select>
+    </div>
+    <div class="fg" id="fg_حساسية_غذائية" style="display:none">
+      <label>تفاصيل الحساسية الغذائية</label>
+      <input type="text" id="تفاصيل_حساسية_غذائية" placeholder="مثال: حساسية من الفول السوداني، الألبان...">
+    </div>
   </div>
 </div>
 
@@ -492,8 +836,80 @@ textarea { resize:vertical; min-height:72px; }
 </form>
 <div class="toast" id="toast"></div>
 
+<!-- ══════════ مودال التعهد ══════════ -->
+<div id="pledge-overlay">
+  <div id="pledge-modal">
+    <div id="pledge-header">
+      <h2>📄 تعهد وإقرار رب الأسرة</h2>
+      <button id="pledge-close" onclick="closePledge()">✕</button>
+    </div>
+
+    <div id="pledge-paper">
+      <div class="pledge-logo-row">
+        <img src="logo.png" alt="تكية أم علي" onerror="this.style.display='none'">
+        <div class="pledge-org">
+          <div class="org-name">تكية أم علي</div>
+          <div class="org-sub">مشروع تعافي أطفال غزة</div>
+        </div>
+        <div class="pledge-date-ref">
+          <div>التاريخ: <span id="pledge-date-val"></span></div>
+          <div>رقم الطلب: <span id="pledge-ref-val"></span></div>
+        </div>
+      </div>
+
+      <div class="pledge-title">إقرار وتعهد</div>
+
+      <div class="pledge-body">
+        <p>
+          <strong> أنا الموقّع أدناه،</strong>
+          <strong class="hl">رب الأسرة: </strong>
+          <span class="val" id="p_name">—</span>،
+          <strong> حامل الهوية رقم</strong>
+          <span class="val" id="p_id">—</span>،
+          <strong> أُقرّ وأتعهد بما يلي:</strong>
+        </p>
+        <ul class="pledge-items">
+          <li>جميع البيانات والمعلومات المقدمة في هذا النموذج صحيحة ودقيقة، وأتحمّل المسؤولية الكاملة عن أي معلومات غير صحيحة.</li>
+          <li>الطفل/الطالب المسجّل في هذا النموذج فعلياً تحت كفالتي ومسؤوليتي القانونية والأسرية.</li>
+          <li>أوافق على مشاركة هذه البيانات مع الجهات المانحة والشركاء ذوي العلاقة لأغراض الدعم والمساعدة الإنسانية.</li>
+          <li>أُقرّ بأحقية المؤسسة في التحقق من صحة البيانات بالوسائل المتاحة.</li>
+          <li>ألتزم بإخطار المؤسسة فور حدوث أي تغيير جوهري في الأوضاع الأسرية (تغيير مكان النزوح، إضافة مولود أو حالات الطلاق).</li>
+        </ul>
+        <p style="margin-top:10px">وأُقرّ بأنني اطّلعت على جميع شروط وأحكام البرنامج وقبلتها بمحض إرادتي.</p>
+      </div>
+
+      <div class="pledge-sign-area">
+        <div class="pledge-sign-box">
+          <div class="sign-label">توقيع ولي الأمر / رب الأسرة</div>
+          <div class="sign-line"></div>
+          <div class="sign-name" id="p_name_sign">—</div>
+        </div>
+        <div class="pledge-sign-box">
+          <div class="sign-label">التاريخ</div>
+          <div class="sign-name" id="p_date_sign">—</div>
+        </div>
+      </div>
+
+      <p class="pledge-auto-notice">يُعد هذا إشعارًا إلكترونيًا تلقائيًا يصدر فور موافقة ربّ الأسرة على &rdquo;مشاركة البيانات، واستكمال عملية تسجيل وتعبئة وإرفاق البيانات المطلوبة، ومن ثم إرسالها لحفظها في النظام&ldquo;</p>
+
+      <div class="pledge-footer-bar"></div>
+    </div>
+
+    <div class="pledge-processing" id="pledge-proc">
+      ⏳ جارٍ تحويل التعهد إلى صورة وإرسال البيانات...
+    </div>
+
+    <div id="pledge-actions">
+      <button class="pledge-btn pledge-btn-cancel" onclick="closePledge()">↩ رجوع وتعديل</button>
+      <button class="pledge-btn pledge-btn-confirm" id="pledge-confirm-btn" onclick="confirmAndSubmit()">
+        ✅ أوافق وأرسل البيانات
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxzDsG_lwYbtyL3YEv57-GiqtUBGl5DW6w39sJzz8PLTMk1kTNKjN2pCsgudyHgRHVA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw8dQKMOWLctK_iQR9O-pQJAR8zaslgtZwbAL_bwMgCyMPq5mqmPd6ZNYnc8C5zLAGP/exec';
 
 const d10 = v => /^\d{10}$/.test(v);
 const d9  = v => /^\d{9}$/.test(v);
@@ -507,7 +923,9 @@ function setErr(id, show) {
 function validate() {
   let ok = true;
   // الطالب
-  ok &= setErr('اسم_الطالب',              document.getElementById('اسم_الطالب').value.trim().length < 7);
+  const _snErr = ['الاسم_الأول_الطالب','الاسم_الثاني_الطالب','الاسم_الثالث_الطالب','الاسم_الرابع_الطالب'].some(id => !document.getElementById(id).value.trim());
+  document.getElementById('e_اسم_الطالب').classList.toggle('show', _snErr);
+  if (_snErr) ok = false;
   ok &= setErr('رقم_هوية_الطالب',         !d9(document.getElementById('رقم_هوية_الطالب').value.trim()));
   const _today = new Date().toISOString().split('T')[0];
   const _bd1 = document.getElementById('تاريخ_ميلاد_الطالب').value;
@@ -517,8 +935,18 @@ function validate() {
   ok &= setErr('السنة_الدراسية',           !document.getElementById('السنة_الدراسية').value);
   ok &= setErr('صلة_القرابة_لرب_الأسرة',  !document.getElementById('صلة_القرابة_لرب_الأسرة').value);
   // رب الأسرة
-  ok &= setErr('اسم_رب_الأسرة',           document.getElementById('اسم_رب_الأسرة').value.trim().length < 5);
+  const _hnErr = ['الاسم_الأول_رب_الأسرة','الاسم_الثاني_رب_الأسرة','الاسم_الثالث_رب_الأسرة','الاسم_الرابع_رب_الأسرة'].some(id => !document.getElementById(id).value.trim());
+  document.getElementById('e_اسم_رب_الأسرة').classList.toggle('show', _hnErr);
+  if (_hnErr) ok = false;
   ok &= setErr('رقم_هوية_رب_الأسرة',      !d9(document.getElementById('رقم_هوية_رب_الأسرة').value.trim()));
+  // رقم هوية الطالب ورب الأسرة يجب أن يكونا مختلفين
+  if (document.getElementById('رقم_هوية_الطالب').value.trim() &&
+      document.getElementById('رقم_هوية_رب_الأسرة').value.trim() &&
+      document.getElementById('رقم_هوية_الطالب').value.trim() === document.getElementById('رقم_هوية_رب_الأسرة').value.trim()) {
+    setErr('رقم_هوية_رب_الأسرة', true);
+    document.getElementById('e_رقم_هوية_رب_الأسرة').textContent = '⚠ رقم الهوية لا يجوز أن يكون نفس رقم هوية الطالب';
+    ok = false;
+  }
   const _bd2 = document.getElementById('تاريخ_ميلاد_رب_الأسرة').value;
   ok &= setErr('تاريخ_ميلاد_رب_الأسرة', !_bd2 || _bd2 > _today);
   ok &= setErr('الحالة_الاجتماعية',        !document.getElementById('الحالة_الاجتماعية').value);
@@ -539,7 +967,17 @@ function validate() {
   ok &= setErr('الحالة_الصحية_رب_الأسرة', !document.getElementById('الحالة_الصحية_رب_الأسرة').value);
   ok &= setErr('مؤهل_للعمل',              !document.getElementById('مؤهل_للعمل').value);
   ok &= setErr('الدخل',                   document.getElementById('الدخل').value === '');
-  ok &= setErr('عدد_المعالين',            document.getElementById('عدد_المعالين').value === '');
+  // تحقق توافق تاريخ الميلاد مع السنة الدراسية
+  const _gradeAges = {'البستان':[3,6],'التمهيدي':[4,7],'الأول':[6,9],'الثاني':[7,10],'الثالث':[8,11],'الرابع':[9,12],'الخامس':[10,13],'السادس':[11,14],'السابع':[12,15],'الثامن':[13,16],'التاسع':[14,17],'العاشر':[15,18],'الحادي عشر':[16,20],'الثاني عشر':[17,21]};
+  const _grade = document.getElementById('السنة_الدراسية').value;
+  if (_bd1 && !(_bd1 > _today) && _grade && _gradeAges[_grade]) {
+    const _ageY = (new Date() - new Date(_bd1)) / 31557600000;
+    const [_mn, _mx] = _gradeAges[_grade];
+    if (_ageY < _mn || _ageY > _mx) {
+      document.getElementById('e_تاريخ_ميلاد_الطالب').textContent = `⚠ العمر (${Math.floor(_ageY)} سنة) لا يتناسب مع ${_grade} — المتوقع ${_mn}–${_mx} سنة`;
+      ok &= setErr('تاريخ_ميلاد_الطالب', true);
+    }
+  }
   ok &= setErr('طبيعة_المسكن_الحالي',     !document.getElementById('طبيعة_المسكن_الحالي').value);
   ok &= setErr('هواية_الطفل',             !document.getElementById('هواية_الطفل').value.trim());
   ok &= setErr('المهنة_التي_يحلم_بها',    !document.getElementById('المهنة_التي_يحلم_بها').value.trim());
@@ -554,7 +992,7 @@ function validate() {
   ok &= setErr('نوع_الإصابة',             !document.getElementById('نوع_الإصابة').value.trim());
   ok &= setErr('طبيعة_الإصابة',           !document.getElementById('طبيعة_الإصابة').value);
   ok &= setErr('يحتاج_علاج_طبيعي',        !document.getElementById('يحتاج_علاج_طبيعي').value);
-  if (!photoData) { document.getElementById('photo-wrap').style.borderColor='var(--error)'; ok = false; } else { document.getElementById('photo-wrap').style.borderColor=''; }
+  if (!photoData) { document.getElementById('photo-wrap').classList.add('err'); ok = false; } else { document.getElementById('photo-wrap').classList.remove('err'); }
   const _cb = document.getElementById('consent-cb');
   if (!_cb.checked) { document.getElementById('consent-wrap').classList.add('err-consent'); document.getElementById('consent-err').classList.add('show'); ok = false; } else { document.getElementById('consent-wrap').classList.remove('err-consent'); document.getElementById('consent-err').classList.remove('show'); }
   return !!ok;
@@ -572,93 +1010,512 @@ function toast(msg, type) {
 }
 
 const IDS = [
-  'اسم_الطالب','رقم_هوية_الطالب','تاريخ_ميلاد_الطالب','الحالة_الصحية_الطالب',
+  'الاسم_الأول_الطالب','الاسم_الثاني_الطالب','الاسم_الثالث_الطالب','الاسم_الرابع_الطالب',
+  'رقم_هوية_الطالب','تاريخ_ميلاد_الطالب','الحالة_الصحية_الطالب',
   'وصف_الحالة_الصحية_الطالب','هل_على_مقاعد_الدراسة','المستوى_التعليمي','السنة_الدراسية',
-  'صلة_القرابة_لرب_الأسرة','اسم_رب_الأسرة','رقم_هوية_رب_الأسرة','تاريخ_ميلاد_رب_الأسرة',
+  'صلة_القرابة_لرب_الأسرة',
+  'الاسم_الأول_رب_الأسرة','الاسم_الثاني_رب_الأسرة','الاسم_الثالث_رب_الأسرة','الاسم_الرابع_رب_الأسرة',
+  'رقم_هوية_رب_الأسرة','تاريخ_ميلاد_رب_الأسرة',
   'الحالة_الاجتماعية','رقم_جوال_1','رقم_جوال_2','رقم_جوال_3','رقم_واتساب',
-  'الحالة_الصحية_رب_الأسرة','وصف_الحالة_الصحية_رب_الأسرة','مؤهل_للعمل','الدخل',
-  'عدد_أفراد_الأسرة','عدد_المعالين','صلة_القرابة_للمعالين','المستوى_التعليمي_للمعالين',
+  'الحالة_الصحية_رب_الأسرة','وصف_الحالة_الصحية_رب_الأسرة','مؤهل_للعمل','الدخل','المستوى_التعليمي_رب_الأسرة',
+  'عدد_أفراد_الأسرة','عدد_المعالين',
   'ملاحظات','حالة_المنزل','طبيعة_المسكن_الحالي','العنوان','ملاحظات_السكن',
   'هواية_الطفل','المهنة_التي_يحلم_بها','أكثر_ما_افتقده_بسبب_الحرب','عدد_سنوات_الانقطاع',
   'يحتاج_دعم_نفسي','ماذا_يفعل_بيومه','رسالة_الطفل','الهوايات',
-  'حلم_الطفل','المادة_المفضلة','نوع_الإصابة','طبيعة_الإصابة','يحتاج_علاج_طبيعي'
+  'حلم_الطفل','المادة_المفضلة','نوع_الإصابة','طبيعة_الإصابة','يحتاج_علاج_طبيعي',
+  'هل_الطالب_يتيم','حساسية_غذائية','تفاصيل_حساسية_غذائية'
 ];
 
-document.getElementById('frm').addEventListener('submit', async function(e) {
+// ── فتح التعهد عند الضغط على إرسال ──
+document.getElementById('frm').addEventListener('submit', function(e) {
   e.preventDefault();
   if (!validate()) {
     toast('يرجى تصحيح الأخطاء أولاً', 'fail');
     document.querySelector('.err')?.scrollIntoView({behavior:'smooth',block:'center'});
     return;
   }
+  openPledge();
+});
 
-  const btn = document.getElementById('sbtn');
-  btn.disabled = true; btn.classList.add('loading');
+var currentPledgeRef = '';  // متغير عام لحفظ رقم الطلب
 
+function openPledge() {
+  const name = ['الاسم_الأول_رب_الأسرة','الاسم_الثاني_رب_الأسرة','الاسم_الثالث_رب_الأسرة','الاسم_الرابع_رب_الأسرة'].map(i=>(document.getElementById(i)||{}).value?.trim()||'').filter(Boolean).join(' ') || '—';
+  const idNum = document.getElementById('رقم_هوية_رب_الأسرة').value.trim();
+  const now   = new Date();
+  const dateStr = now.toLocaleDateString('ar-SA', {year:'numeric',month:'long',day:'numeric'});
+  const ref   = 'REQ-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.floor(Math.random()*9000+1000);
+  currentPledgeRef = ref;  // احفظه عشان confirmAndSubmit يوصله
+
+  document.getElementById('p_name').textContent      = name;
+  document.getElementById('p_id').textContent        = idNum;
+  document.getElementById('p_name_sign').textContent = name;
+  document.getElementById('p_date_sign').textContent = dateStr;
+  document.getElementById('pledge-date-val').textContent = dateStr;
+  document.getElementById('pledge-ref-val').textContent  = ref;
+
+  document.getElementById('pledge-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePledge() {
+  document.getElementById('pledge-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── التأكيد: تحويل التعهد لصورة ثم الإرسال ──
+async function confirmAndSubmit() {
+  const btn  = document.getElementById('pledge-confirm-btn');
+  const proc = document.getElementById('pledge-proc');
+  btn.disabled = true;
+  proc.classList.add('show');
+
+  // جمع البيانات
   const data = {};
   IDS.forEach(id => {
     const el = document.getElementById(id);
     data[id] = el ? el.value.trim() : '';
   });
-
+  // حوّل أرقام الهوية والجوال لنص مع الأصفار الأمامية قبل الإرسال
+  ['رقم_هوية_الطالب','رقم_هوية_رب_الأسرة'].forEach(function(f){
+    if (data[f]) data[f] = String(data[f]).padStart(9, '0');
+  });
+  ['رقم_جوال_1','رقم_جوال_2','رقم_جوال_3','رقم_واتساب'].forEach(function(f){
+    if (data[f]) data[f] = String(data[f]).padStart(10, '0');
+  });
   data['صورة_الطفل'] = photoData || '';
-
-  // رقم واتساب مع مقدمة الدولة
+  // تعدد الزوجات
+  var _poly = document.querySelector('input[name="تعدد_زوجات"]:checked');
+  data['تعدد_زوجات'] = _poly ? _poly.value : 'لا';
+  // بيانات المعالين
+  var _depN = parseInt(document.getElementById('عدد_المعالين').value) || 0;
+  if (_depN > 0) {
+    var _deps = [];
+    for (var _di = 1; _di <= _depN; _di++) {
+      _deps.push({
+        اسم:            (document.getElementById('dep_name_' + _di)||{}).value || '',
+        هوية:           (document.getElementById('dep_id_'   + _di)||{}).value || '',
+        تاريخ_الميلاد: (document.getElementById('dep_dob_'  + _di)||{}).value || '',
+        صلة_القرابة:   (document.getElementById('dep_rel_'  + _di)||{}).value || ''
+      });
+    }
+    data['بيانات_المعالين'] = JSON.stringify(_deps);
+  }
+  data['رقم_الطلب']  = currentPledgeRef;
+  if (editRowNumber > 0) data['_edit_row'] = editRowNumber;
   if (data['رقم_واتساب']) {
     data['رقم_واتساب'] = document.getElementById('wa_prefix').value + data['رقم_واتساب'];
   }
 
+  // رسم التعهد على Canvas مباشرة — بدون html2canvas
+  try {
+    const name    = ['الاسم_الأول_رب_الأسرة','الاسم_الثاني_رب_الأسرة','الاسم_الثالث_رب_الأسرة','الاسم_الرابع_رب_الأسرة'].map(k=>data[k]||'').filter(Boolean).join(' ') || '—';
+    const idNum   = data['رقم_هوية_رب_الأسرة'] || '—';
+    const ref     = currentPledgeRef || '—';
+    const now2    = new Date();
+    const dateStr2 = now2.toLocaleDateString('ar-SA', {year:'numeric',month:'long',day:'numeric'});
+
+    const W = 794, H = 1123;
+    const cv = document.createElement('canvas');
+    cv.width = W * 2; cv.height = H * 2;
+    const ctx = cv.getContext('2d');
+    ctx.scale(2, 2);
+
+    // خلفية بيضاء
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, W, H);
+
+    // شريط أعلى
+    ctx.fillStyle = '#1a3d6b';
+    ctx.fillRect(0, 0, W, 8);
+
+    // خط فاصل أسفل الرأس
+    ctx.strokeStyle = '#1a3d6b'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(50, 120); ctx.lineTo(W-50, 120); ctx.stroke();
+
+    function rtlText(text, x, y, font, color) {
+      ctx.font = font; ctx.fillStyle = color||'#111';
+      ctx.direction='rtl'; ctx.textAlign='right'; ctx.fillText(text, x, y);
+    }
+    function centerText(text, y, font, color) {
+      ctx.font = font; ctx.fillStyle = color||'#111';
+      ctx.direction='rtl'; ctx.textAlign='center'; ctx.fillText(text, W/2, y);
+    }
+
+    // اسم المؤسسة
+    centerText('تكية أم علي', 65, 'bold 20px Cairo,Arial', '#1a3d6b');
+    centerText('مشروع تعافي أطفال غزة', 85, '13px Cairo,Arial', '#6b7280');
+
+    // التاريخ ورقم الطلب (يسار)
+    ctx.font='12px Cairo,Arial'; ctx.fillStyle='#6b7280';
+    ctx.direction='ltr'; ctx.textAlign='left';
+    ctx.fillText('التاريخ: ' + dateStr2, 50, 60);
+    ctx.fillText('رقم الطلب: ' + ref,    50, 78);
+
+    // عنوان
+    centerText('إقرار وتعهد', 155, 'bold 22px Cairo,Arial', '#1a3d6b');
+
+    // مقدمة
+    let y = 195;
+    rtlText('أنا الموقّع أدناه، رب الأسرة:  ' + name, W-50, y, 'bold 14px Cairo,Arial'); y+=26;
+    rtlText('حامل الهوية رقم:  ' + idNum,              W-50, y, 'bold 14px Cairo,Arial'); y+=26;
+    rtlText('أُقرّ وأتعهد بما يلي:',                   W-50, y, 'bold 14px Cairo,Arial'); y+=20;
+
+    ctx.strokeStyle='#e5e7eb'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(50,y+5); ctx.lineTo(W-50,y+5); ctx.stroke(); y+=22;
+
+    // البنود
+    const items = [
+      'جميع البيانات والمعلومات المقدمة في هذا النموذج صحيحة ودقيقة،وأتحمّل المسؤولية الكاملة عن أي معلومات غير صحيحة.',
+      'الطفل/الطالب المسجّل في هذا النموذج فعلياً تحت كفالتي ومسؤوليتي القانونية والأسرية.',
+      'أوافق على مشاركة هذه البيانات مع الجهات المانحة والشركاء ذوي العلاقة لأغراض الدعم والمساعدة الإنسانية.',
+      'أُقرّ بأحقية المؤسسة في التحقق من صحة البيانات بالوسائل المتاحة.',
+      'ألتزم بإخطار المؤسسة فور حدوث أي تغيير جوهري في الأوضاع الأسرية (تغيير مكان النزوح، إضافة مولود أو حالات الطلاق).',
+    ];
+    const itemMaxW = W - 120;
+    items.forEach((item, i) => {
+      ctx.fillStyle='#1a3d6b';
+      ctx.beginPath(); ctx.arc(W-58, y-4, 4, 0, Math.PI*2); ctx.fill();
+      ctx.font='13px Cairo,Arial'; ctx.fillStyle='#1a1a1a';
+      ctx.direction='rtl'; ctx.textAlign='right';
+      const iWords = item.split(' ');
+      let iLine=''; const iLineH=18; let iY=y; let iLinesCount=0;
+      iWords.forEach(iw => {
+        const t = iLine ? iLine+' '+iw : iw;
+        if(ctx.measureText(t).width > itemMaxW && iLine){ ctx.fillText(iLine, W-70, iY); iY+=iLineH; iLine=iw; iLinesCount++; }
+        else { iLine=t; }
+      });
+      if(iLine){ ctx.fillText(iLine, W-70, iY); iLinesCount++; }
+      const itemH = Math.max(38, iLinesCount * iLineH + 14);
+      if(i < items.length-1){
+        ctx.strokeStyle='#f3f4f6'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(50, y+itemH-6); ctx.lineTo(W-50, y+itemH-6); ctx.stroke();
+      }
+      y += itemH;
+    });
+
+    y += 10;
+    rtlText('وأُقرّ بأنني اطّلعت على جميع شروط وأحكام البرنامج وقبلتها بمحض إرادتي.', W-50, y, '13px Cairo,Arial');
+    y += 55;
+
+    ctx.strokeStyle='#d1d5db'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(W-50,y); ctx.stroke(); y+=40;
+
+    // صناديق التوقيع
+    [
+      {label:'توقيع ولي الأمر / رب الأسرة', val:name,     xr:W-50},
+      {label:'التاريخ',                       val:dateStr2, xr:280},
+    ].forEach(b => {
+      ctx.font='11px Cairo,Arial'; ctx.fillStyle='#6b7280';
+      ctx.direction='rtl'; ctx.textAlign='right'; ctx.fillText(b.label, b.xr, y);
+      ctx.strokeStyle='#333'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(b.xr-160, y+35); ctx.lineTo(b.xr, y+35); ctx.stroke();
+      ctx.font='bold 12px Cairo,Arial'; ctx.fillStyle='#111';
+      ctx.fillText(b.val, b.xr, y+52);
+    });
+
+    // إشعار إلكتروني تلقائي بعد التوقيع
+    y += 78;
+    ctx.strokeStyle='#e5e7eb'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(W-50,y); ctx.stroke(); y+=14;
+
+    ctx.fillStyle='#f0f4fa';
+    ctx.fillRect(50, y, W-100, 62);
+    ctx.strokeStyle='#2563ab'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(W-50, y+8); ctx.lineTo(W-50, y+54); ctx.stroke();
+
+    const noticeText = 'يُعد هذا إشعارًا إلكترونيًا تلقائيًا يصدر فور موافقة ربّ الأسرة على “مشاركة البيانات، واستكمال عملية تسجيل وتعبئة وإرفاق البيانات المطلوبة، ومن ثم إرسالها لحفظها في النظام”';
+    ctx.font='11px Cairo,Arial'; ctx.fillStyle='#374151';
+    ctx.direction='rtl'; ctx.textAlign='right';
+    const noticeMaxW = W - 130;
+    const noticeWords = noticeText.split(' ');
+    let noticeLine=''; const noticeLineH=18; let noticeY=y+22;
+    noticeWords.forEach(w => {
+      const t = noticeLine ? noticeLine+' '+w : w;
+      if(ctx.measureText(t).width > noticeMaxW && noticeLine){ ctx.fillText(noticeLine, W-65, noticeY); noticeY+=noticeLineH; noticeLine=w; }
+      else { noticeLine=t; }
+    });
+    if(noticeLine) ctx.fillText(noticeLine, W-65, noticeY);
+
+    // شريط أسفل
+    ctx.fillStyle='#1a3d6b'; ctx.fillRect(0, H-10, W, 10);
+
+    data['صورة_التعهد'] = cv.toDataURL('image/jpeg', 0.92);
+  } catch(err) {
+    console.warn('خطأ في رسم التعهد:', err);
+    data['صورة_التعهد'] = '';
+  }
+  // إرسال البيانات
   try {
     await fetch(SCRIPT_URL, {
       method:'POST', body:JSON.stringify(data),
       headers:{'Content-Type':'application/json'}, mode:'no-cors'
     });
+    closePledge();
     document.getElementById('success-screen').classList.add('visible');
     window.scrollTo({top:0,behavior:'smooth'});
   } catch(err) {
     toast('حدث خطأ في الاتصال، حاول مجدداً', 'fail');
   }
 
-  btn.disabled = false; btn.classList.remove('loading');
-});
+  btn.disabled = false;
+  proc.classList.remove('show');
+}
 
 var photoData = null;
-function handlePhotoUpload(input) {
-  if (!input.files || !input.files[0]) return;
-  var file = input.files[0];
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var img = new Image();
-    img.onload = function() {
-      var canvas = document.createElement('canvas');
-      var MAX_WIDTH = 800;
-      var scale = Math.min(1, MAX_WIDTH / img.width);
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      photoData = canvas.toDataURL('image/jpeg', 0.6);
-      document.getElementById('photo-wrap').classList.add('has-file');
-      var n = document.getElementById('photo-name');
-      n.style.display = 'block';
-      n.textContent = 'تم تجهيز الصورة: ' + file.name;
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+var cameraStream = null;
+
+function openCamera() {
+  var pw = document.getElementById('photo-wrap');
+  pw.classList.remove('err'); pw.style.borderColor = '';
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false })
+    .catch(function() { return navigator.mediaDevices.getUserMedia({ video: true, audio: false }); })
+    .then(function(stream) {
+      cameraStream = stream;
+      document.getElementById('cam-video').srcObject = stream;
+      document.getElementById('cam-idle').style.display   = 'none';
+      document.getElementById('cam-active').style.display = 'block';
+      document.getElementById('cam-result').style.display = 'none';
+    })
+    .catch(function(err) { toast('تعذّر فتح الكاميرا: ' + err.message, 'fail'); });
+}
+
+function capturePhoto() {
+  var v = document.getElementById('cam-video');
+  var c = document.createElement('canvas');
+  var scale = Math.min(1, 800 / (v.videoWidth || 640));
+  c.width  = (v.videoWidth  || 640) * scale;
+  c.height = (v.videoHeight || 480) * scale;
+  c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+  photoData = c.toDataURL('image/jpeg', 0.75);
+  _stopCamera();
+  document.getElementById('cam-preview').src          = photoData;
+  document.getElementById('cam-active').style.display = 'none';
+  document.getElementById('cam-idle').style.display   = 'none';
+  document.getElementById('cam-result').style.display = 'block';
+  document.getElementById('photo-wrap').classList.add('has-photo');
+}
+
+function closeCamera() {
+  _stopCamera();
+  document.getElementById('cam-active').style.display = 'none';
+  document.getElementById('cam-idle').style.display   = 'block';
+}
+
+function retakePhoto() {
+  photoData = null;
+  document.getElementById('photo-wrap').classList.remove('has-photo');
+  document.getElementById('cam-result').style.display = 'none';
+  openCamera();
+}
+
+function _stopCamera() {
+  if (cameraStream) { cameraStream.getTracks().forEach(function(t){ t.stop(); }); cameraStream = null; }
+  var v = document.getElementById('cam-video');
+  if (v) v.srcObject = null;
 }
 
 function resetForm() {
   document.getElementById('success-screen').classList.remove('visible');
   document.getElementById('frm').reset();
   photoData = null;
+  currentPledgeRef = '';
+  _stopCamera();
+  document.getElementById('cam-idle').style.display   = 'block';
+  document.getElementById('cam-active').style.display = 'none';
+  document.getElementById('cam-result').style.display = 'none';
   var wrap = document.getElementById('photo-wrap');
-  if (wrap) wrap.classList.remove('has-file');
-  var n = document.getElementById('photo-name');
-  if (n) { n.style.display='none'; n.textContent=''; }
+  if (wrap) { wrap.classList.remove('has-photo'); wrap.style.borderColor = ''; }
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 var today = new Date().toISOString().split('T')[0];
+
+// ── رقم الصف عند التعديل (0 = إضافة جديدة) ──
+var editRowNumber = 0;
+
+// ── فحص وتوجيه حسب الزر ──
+async function handleAction(mode) {
+  var idVal = document.getElementById('check-id-input').value.trim();
+  var errEl = document.getElementById('check-id-err');
+  if (!/^\d{9}$/.test(idVal)) { errEl.style.display='block'; return; }
+  errEl.style.display = 'none';
+
+  var activeBtn = document.getElementById(mode === 'new' ? 'btn-register' : 'btn-edit');
+  var spin = activeBtn.querySelector('.spin');
+  activeBtn.disabled = true; spin.style.display = 'inline-block';
+  document.getElementById('check-result').innerHTML = '';
+
+  try {
+    var res  = await fetch(SCRIPT_URL + '?id=' + idVal);
+    var json = await res.json();
+    var fullName = json.found ? [json.data['الاسم_الأول_الطالب'],json.data['الاسم_الثاني_الطالب'],json.data['الاسم_الثالث_الطالب'],json.data['الاسم_الرابع_الطالب']].filter(Boolean).join(' ') : '';
+
+    if (mode === 'new') {
+      if (json.found) {
+        // موجود → خطأ
+        document.getElementById('check-result').innerHTML =
+          '<div class="check-found"><div class="cf-title">⚠️ هذا الطالب مسجّل مسبقاً</div><div class="cf-name">' + fullName + '</div></div>';
+      } else {
+        // غير موجود → تسجيل جديد
+        startNewForm(idVal);
+      }
+    } else {
+      if (json.found) {
+        // موجود → تعديل
+        startEdit(json);
+      } else {
+        // غير موجود → خطأ
+        document.getElementById('check-result').innerHTML =
+          '<div style="background:#fff1f2;border:1px solid #fca5a5;border-radius:10px;padding:12px;font-size:13px;font-weight:700;color:#b91c1c">❌ هذا الطالب غير مسجّل في النظام</div>';
+      }
+    }
+  } catch(err) {
+    document.getElementById('check-result').innerHTML =
+      '<div style="color:var(--error);font-size:13px">⚠️ تعذّر الاتصال، تحقق من الإنترنت</div>';
+  }
+  activeBtn.disabled = false; spin.style.display = 'none';
+}
+
+function startNewForm(prefillId) {
+  editRowNumber = 0;
+  if (prefillId) {
+    var el = document.getElementById('الاسم_الأول_الطالب'); // scroll target
+    var idEl = document.getElementById('رقم_هوية_الطالب');
+    idEl.value = prefillId;
+    idEl.readOnly = true;
+    idEl.style.background = '#f3f4f6';
+    idEl.style.color = '#6b7280';
+  }
+  document.getElementById('check-screen').style.display = 'none';
+}
+
+function startEdit(result) {
+  editRowNumber = result.row;
+  populateForm(result.data);
+  document.getElementById('check-screen').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function populateForm(d) {
+  // معالجة رقم الواتساب — افصل المقدمة عن الرقم
+  if (d['رقم_واتساب']) {
+    var waFull = String(d['رقم_واتساب']);
+    var pfxEl  = document.getElementById('wa_prefix');
+    ['+972', '+970'].forEach(function(p) {
+      if (waFull.startsWith(p)) {
+        if (pfxEl) pfxEl.value = p;
+        waFull = waFull.slice(p.length);
+      }
+    });
+    d['رقم_واتساب'] = waFull;
+  }
+  // الحقول العادية (تتجاهل رقم_واتساب الآن بعد المعالجة)
+  IDS.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el || d[id] === undefined || d[id] === null || d[id] === '') return;
+    el.value = d[id];
+  });
+  // المستوى التعليمي → فلترة السنة الدراسية
+  var lvl = d['المستوى_التعليمي'];
+  if (lvl) { filterGrades(lvl); document.getElementById('السنة_الدراسية').value = d['السنة_الدراسية'] || ''; }
+  // الحالة الاجتماعية → تعدد الزوجات
+  var cs = d['الحالة_الاجتماعية'];
+  if (cs) togglePolygamy(cs);
+  if (d['تعدد_زوجات']) {
+    document.querySelectorAll('input[name="تعدد_زوجات"]').forEach(function(r){ r.checked = r.value === d['تعدد_زوجات']; });
+  }
+  // حساسية غذائية
+  if (d['حساسية_غذائية']) { toggleFoodAllergy(d['حساسية_غذائية']); }
+  // المعالين
+  if (d['عدد_المعالين'] && parseInt(d['عدد_المعالين']) > 0) {
+    generateDependents(d['عدد_المعالين']);
+    for (var i = 1; i <= parseInt(d['عدد_المعالين']); i++) {
+      var n = document.getElementById('dep_name_' + i); if (n) n.value = d['معال_' + i + '_اسم'] || '';
+      var hi = document.getElementById('dep_id_'   + i); if (hi) hi.value = d['معال_' + i + '_هوية'] || '';
+      var db = document.getElementById('dep_dob_'  + i); if (db) db.value = d['معال_' + i + '_تاريخ_الميلاد'] || '';
+      var rl = document.getElementById('dep_rel_'  + i); if (rl) rl.value = d['معال_' + i + '_صلة_القرابة'] || '';
+    }
+  }
+  // عرض الصورة الموجودة
+  if (d['رابط_صورة_الطفل']) {
+    var pw = document.getElementById('photo-wrap');
+    var preview = document.getElementById('cam-preview');
+    // حوّل رابط Drive لرابط مباشر للعرض
+    var driveUrl = String(d['رابط_صورة_الطفل']);
+    var fileId = driveUrl.match(/[-\w]{25,}/);
+    var imgSrc = fileId ? 'https://drive.google.com/thumbnail?id=' + fileId[0] + '&sz=w400' : driveUrl;
+    preview.src = imgSrc;
+    document.getElementById('cam-idle').style.display   = 'none';
+    document.getElementById('cam-active').style.display = 'none';
+    document.getElementById('cam-result').style.display = 'block';
+    pw.classList.add('has-photo');
+    photoData = d['رابط_صورة_الطفل']; // احتفظ بالرابط حتى لا تفشل الـ validate
+    // إضافة زر إعادة التصوير فقط
+    if (!document.getElementById('retake-from-edit')) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.id = 'retake-from-edit';
+      btn.className = 'cam-btn-secondary';
+      btn.style.marginTop = '8px';
+      btn.textContent = '🔄 تغيير الصورة';
+      btn.onclick = function() { photoData = null; retakePhoto(); };
+      document.querySelector('.cam-controls').appendChild(btn);
+    }
+  }
+  toast('تم تحميل بيانات الطالب — راجع وعدّل ثم أرسل', 'ok');
+}
+
+// ── فلترة السنة الدراسية حسب المستوى ──
+const _gradeOptions = {
+  'رياض الأطفال': ['البستان','التمهيدي'],
+  'ابتدائي':      ['الأول','الثاني','الثالث','الرابع','الخامس','السادس'],
+  'إعدادي':       ['السابع','الثامن','التاسع'],
+  'ثانوي':        ['العاشر','الحادي عشر','الثاني عشر']
+};
+function filterGrades(level) {
+  var sel = document.getElementById('السنة_الدراسية');
+  sel.innerHTML = '<option value="">-- اختر --</option>';
+  if (!level || !_gradeOptions[level]) { sel.disabled = true; return; }
+  _gradeOptions[level].forEach(function(g) {
+    var o = document.createElement('option');
+    o.textContent = g; sel.appendChild(o);
+  });
+  sel.disabled = false;
+}
+
+// ── حساسية غذائية ──
+function toggleFoodAllergy(val) {
+  document.getElementById('fg_حساسية_غذائية').style.display = val === 'نعم' ? 'flex' : 'none';
+  if (val === 'لا') document.getElementById('تفاصيل_حساسية_غذائية').value = '';
+}
+
+// ── تعدد الزوجات ──
+function togglePolygamy(val) {
+  document.getElementById('fg_تعدد_زوجات').style.display = (val === 'متزوج/ة') ? 'flex' : 'none';
+}
+
+// ── المعالون ──
+function generateDependents(val) {
+  var n = parseInt(val) || 0;
+  var sec  = document.getElementById('dependents-section');
+  var cont = document.getElementById('dependents-container');
+  cont.innerHTML = '';
+  if (n <= 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'flex'; sec.style.flexDirection = 'column';
+  for (var i = 1; i <= n; i++) {
+    var div = document.createElement('div');
+    div.className = 'sibling-card';
+    div.innerHTML =
+      '<div class="sibling-card-head">| المعال رقم ' + i + '</div>' +
+      '<div class="sibling-grid">' +
+        '<div class="fg"><label>الاسم الكامل</label><input type="text" id="dep_name_' + i + '" placeholder="الاسم الكامل"></div>' +
+        '<div class="fg"><label>رقم الهوية</label><input type="text" id="dep_id_' + i + '" placeholder="رقم الهوية" maxlength="9" inputmode="numeric"></div>' +
+        '<div class="fg"><label>تاريخ الميلاد</label><input type="date" id="dep_dob_' + i + '" max="' + today + '"></div>' +
+        '<div class="fg"><label>صلة القرابة</label><select id="dep_rel_' + i + '"><option value="">-- اختر --</option><option>ابن</option><option>ابنة</option><option>أخ</option><option>أخت</option><option>أخرى</option></select></div>' +
+      '</div>';
+    cont.appendChild(div);
+  }
+}
 document.getElementById('تاريخ_ميلاد_الطالب').max = today;
 document.getElementById('تاريخ_ميلاد_رب_الأسرة').max = today;
 </script>
