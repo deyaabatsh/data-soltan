@@ -973,7 +973,7 @@ function validate() {
   if (_bd1 && !(_bd1 > _today) && _grade && _gradeAges[_grade]) {
     const _ageY = (new Date() - new Date(_bd1)) / 31557600000;
     const [_mn, _mx] = _gradeAges[_grade];
-    if (_ageY < _mn || _ageY > _mx) {
+    if ((_ageY < _mn && !(_grade === 'الأول' && _bd1 <= '2021-01-31')) || _ageY > _mx) {
       document.getElementById('e_تاريخ_ميلاد_الطالب').textContent = `⚠ العمر (${Math.floor(_ageY)} سنة) لا يتناسب مع ${_grade} — المتوقع ${_mn}–${_mx} سنة`;
       ok &= setErr('تاريخ_ميلاد_الطالب', true);
     }
